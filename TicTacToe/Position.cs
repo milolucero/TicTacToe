@@ -8,5 +8,33 @@ namespace TicTacToe
 {
     internal class Position
     {
+        private int x;
+        private int y;
+
+        public Position(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int GetX()
+        {
+            return x;
+        }
+
+        public void SetX(int x)
+        {
+            this.x = x;
+        }
+
+        public int GetY()
+        {
+            return y;
+        }
+
+        public void SetY(int y)
+        {
+            this.y = y;
+        }
     }
 }
