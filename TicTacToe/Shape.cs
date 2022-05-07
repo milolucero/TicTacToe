@@ -1,0 +1,5 @@
+﻿enum Shape
+{
+    X,
+    O
+}
