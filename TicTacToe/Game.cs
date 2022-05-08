@@ -34,7 +34,8 @@ namespace TicTacToe
                 players[i] = new Player(GetNewId());
             }
 
-            currentTurnPlayer = GetCurrentTurnPlayer();
+            // player[0] (X) always has the first turn.
+            currentTurnPlayer = players[0];
 
             countOfTurns = 0;
 
@@ -82,7 +83,8 @@ namespace TicTacToe
         /// <returns>The instance of the player who has the current turn to play.</returns>
         public Player GetCurrentTurnPlayer()
         {
-            return players[0].GetHasTurn() ? players[0] : players[1];
+            return currentTurnPlayer;
+            // return players[0].GetHasTurn() ? players[0] : players[1];
         }
 
         /// <summary>
@@ -100,8 +102,11 @@ namespace TicTacToe
         /// <param name="player">The player who is being set to have the current turn to play.</param>
         public void SetCurrentTurnPlayer(Player player)
         {
-            GetNotCurrentTurnPlayer().SetHasTurn(true);
-            GetCurrentTurnPlayer().SetHasTurn(false);
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i].SetHasTurn(players[i].GetId() == player.GetId());
+            }
+
             currentTurnPlayer = player;
         }
 
@@ -194,7 +199,7 @@ namespace TicTacToe
             //while (!game.winner)
             while (true)
             {
-                Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.");
+                Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.\n");
 
                 game.board.PrintBoard();
                 Console.WriteLine(board);
