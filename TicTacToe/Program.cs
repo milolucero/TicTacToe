@@ -1,10 +1,10 @@
 ﻿using System;
-
-/// <summary>
-/// A simple tic-tac-toe game in console.
-/// </summary>
 namespace TicTacToe
 {
+
+    /// <summary>
+    /// A simple tic-tac-toe game in console.
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

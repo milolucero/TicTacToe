@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TicTacToe
 {
+    /// <summary>
+    /// Represents the tic-tac-toe game.
+    /// </summary>
     internal class Game
     {
         private Board board;
@@ -16,6 +19,10 @@ namespace TicTacToe
         private int nextAssignableId;
         private int countOfTurns;
 
+        /// <summary>
+        /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
+        /// </summary>
+        /// <param name="userShapeChoice">The side/shape (either "X" or "O") chosen by the user.</param>
         public Game(Shape userShapeChoice)
         {
             board = new Board();
@@ -39,16 +46,27 @@ namespace TicTacToe
             botPlayer.SetName("Bot");
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Game class with no arguments, assigning the side/shape "X" by default to the user.
+        /// </summary>
         public Game() : this(Shape.X)
         {
 
         }
 
+        /// <summary>
+        /// Returns the tic-tac-toe Board instance of the game.
+        /// </summary>
+        /// <returns>The tic-tac-toe Board instance of the game.</returns>
         public Board GetBoard()
         {
             return board;
         }
 
+        /// <summary>
+        /// Generates a new unique numeric id, starting from zero.
+        /// </summary>
+        /// <returns>A new unique numeric id.</returns>
         public int GetNewId()
         {
             int newId = nextAssignableId;
@@ -58,25 +76,28 @@ namespace TicTacToe
             return newId;
         }
 
+        /// <summary>
+        /// Returns the instance of the player who has the current turn to play.
+        /// </summary>
+        /// <returns>The instance of the player who has the current turn to play.</returns>
         public Player GetCurrentTurnPlayer()
         {
             return players[0].GetHasTurn() ? players[0] : players[1];
         }
 
         /// <summary>
-        /// Returns the player who has NOT the current turn.
+        /// Returns the instance of the player who does not have the current turn to play.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The instance of the player who does not have the current turn to play.</returns>
         public Player GetNotCurrentTurnPlayer()
         {
             return players[0].GetHasTurn() ? players[1] : players[0];
         }
 
-        //public Player GetCurrentTurnPlayer()
-        //{
-        //    return currentTurnPlayer;
-        //}
-
+        /// <summary>
+        /// Sets the current turn to play to the specified player.
+        /// </summary>
+        /// <param name="player">The player who is being set to have the current turn to play.</param>
         public void SetCurrentTurnPlayer(Player player)
         {
             GetNotCurrentTurnPlayer().SetHasTurn(true);
@@ -85,18 +106,26 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Switches the player's turn.
+        /// Switches turns between the players.
         /// </summary>
         public void SwitchTurns()
         {
             SetCurrentTurnPlayer(GetNotCurrentTurnPlayer());
         }
 
+        /// <summary>
+        /// Gets the instance of the player that is assigned to the user.
+        /// </summary>
+        /// <returns></returns>
         public Player GetUserPlayer()
         {
             return userPlayer;
         }
 
+        /// <summary>
+        /// Assigns the specified side/shape to the user player.
+        /// </summary>
+        /// <param name="userShapeChoice">The side/shape to assign to the user.</param>
         public void SetUserPlayer(Shape userShapeChoice)
         {
             if (userShapeChoice == Shape.X)
@@ -115,6 +144,10 @@ namespace TicTacToe
             }
         }
 
+        /// <summary>
+        /// Gets the instance of the player that is assigned to the computer player.
+        /// </summary>
+        /// <returns>The instance of the player that is assigned to the computer player.</returns>
         public Player GetBotPlayer()
         {
             return botPlayer;
@@ -123,8 +156,8 @@ namespace TicTacToe
         /// <summary>
         /// Sets a player's shape into a specific space. Returns true if the space was taken succesfully, false if it was already occupied.
         /// </summary>
-        /// <param name="player"></param>
-        /// <param name="space"></param>
+        /// <param name="player">The player that should occupy the space.</param>
+        /// <param name="space">The space being occupied.</param>
         /// <returns>True if the space was taken succesfully, false if it was already occupied</returns>
         public bool OccupySpace(Player player, Space space)
         {
@@ -143,6 +176,9 @@ namespace TicTacToe
             return spaceOccupiedSuccessfully;
         }
 
+        /// <summary>
+        /// Starts a new game.
+        /// </summary>
         public void NewGame()
         {
             // Welcome message
@@ -181,6 +217,10 @@ namespace TicTacToe
             return userShapeChoice;
         }
 
+        /// <summary>
+        /// Returns a string representation of the game's state.
+        /// </summary>
+        /// <returns>A string representation of the game's state.</returns>
         public override string ToString()
         {
             string template = "";

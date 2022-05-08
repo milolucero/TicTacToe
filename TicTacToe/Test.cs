@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TicTacToe
 {
+    /// <summary>
+    /// A class for testing purposes.
+    /// </summary>
     internal class Test
     {
         public static void Test1(Game game)

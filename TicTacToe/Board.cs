@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 namespace TicTacToe
 {
+    /// <summary>
+    /// Represents the tic-tac-toe board.
+    /// </summary>
     internal class Board
     {
         private readonly int height;
         private readonly int width;
         private Space[] spaces;
 
+        /// <summary>
+        /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
+        /// </summary>
+        /// <param name="spaces">The spaces that populate the board.</param>
         public Board(Space[] spaces)
         {
             height = Rule.GetBoardDimensions().height;
@@ -19,6 +26,9 @@ namespace TicTacToe
             this.spaces = spaces;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Board class without arguments, filling the board with empty (unassigned) spaces.
+        /// </summary>
         public Board()
         {
             height = Rule.GetBoardDimensions().height;
@@ -40,6 +50,11 @@ namespace TicTacToe
             }
         }
 
+        /// <summary>
+        /// Returns the space instance located at the specified position of the board.
+        /// </summary>
+        /// <param name="position">An instance of the Position class with specified (x, y) coordinate values.</param>
+        /// <returns>The space instance located at the specified position of the board.</returns>
         public Space GetSpace(Position position)
         {
             foreach (Space space in spaces)
@@ -57,9 +72,9 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Prints a string representation of the board.
+        /// Returns a string representation of the board and its current state.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string representation of the board and its current state.</returns>
         public override string ToString()
         {
             string template = "";
