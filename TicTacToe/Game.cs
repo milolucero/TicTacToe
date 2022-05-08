@@ -19,10 +19,13 @@ namespace TicTacToe
         public Game(Shape userShapeChoice)
         {
             board = new Board();
-            players = new Player[2];
 
-            players[0] = new Player(GetNewId());
-            players[1] = new Player(GetNewId());
+            // Create players
+            players = new Player[Rule.GetMaxNumberOfPlayers()];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = new Player(GetNewId());
+            }
 
             currentTurnPlayer = GetCurrentTurnPlayer();
 
@@ -39,6 +42,11 @@ namespace TicTacToe
         public Game() : this(Shape.X)
         {
 
+        }
+
+        public Board GetBoard()
+        {
+            return board;
         }
 
         public int GetNewId()
@@ -112,6 +120,67 @@ namespace TicTacToe
             return botPlayer;
         }
 
+        /// <summary>
+        /// Sets a player's shape into a specific space. Returns true if the space was taken succesfully, false if it was already occupied.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="space"></param>
+        /// <returns>True if the space was taken succesfully, false if it was already occupied</returns>
+        public bool OccupySpace(Player player, Space space)
+        {
+            bool spaceOccupiedSuccessfully = false;
+
+            if (space.GetOccupant() == null)
+            {
+                space.SetOccupant(player);
+                spaceOccupiedSuccessfully = true;
+            }
+            else
+            {
+                Console.WriteLine("The space is already taken. Choose another one.");
+            }
+
+            return spaceOccupiedSuccessfully;
+        }
+
+        public void NewGame()
+        {
+            // Welcome message
+            Console.WriteLine("Tic-tac-toe");
+
+            // Prompt user shape choice
+
+            Shape userShapeChoice = GetUserShapeChoice();
+
+            Console.WriteLine(userShapeChoice.ToString());
+        }
+
+        /// <summary>
+        /// Prompts the user to pick a side (either "X" or "O"). Keeps prompting until the input is valid. Returns the Shape chosen. 
+        /// </summary>
+        /// <returns>The Shape chosen by the user.</returns>
+        public Shape GetUserShapeChoice()
+        {
+            Shape userShapeChoice = Shape.None;
+            while (userShapeChoice == Shape.None)
+            {
+                Console.WriteLine("Choose a side. Enter \"X\" or \"O\" (case insensitive).");
+                string userInput = Console.ReadLine().ToUpper();
+
+                if (Enum.IsDefined(typeof(Shape), userInput))
+                {
+                    // Convert the userInput string into its equivalent Shape.
+                    userShapeChoice = (Shape) Enum.Parse(typeof(Shape), userInput);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid side. Please try again.");
+                }
+            }
+
+            return userShapeChoice;
+        }
+
         public override string ToString()
         {
             string template = "";
@@ -129,10 +198,6 @@ namespace TicTacToe
 
             template += $"User player info:\n{GetUserPlayer().ToString()}\n";
             template += $"Bot player info:\n{GetBotPlayer().ToString()}\n";
-
-            template += $"";
-
-            // string C = $"Player {currentTurnPlayer.GetShape()} has the turn. Player {GetNotCurrentTurnPlayer().GetShape()} does not have the turn.\n\n";
 
             return template;
         }
