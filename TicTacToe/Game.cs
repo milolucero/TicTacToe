@@ -201,8 +201,7 @@ namespace TicTacToe
             {
                 Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.\n");
 
-                game.board.PrintBoard();
-                Console.WriteLine(board);
+                board.PrintBoard();
 
                 Space userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
                 OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);

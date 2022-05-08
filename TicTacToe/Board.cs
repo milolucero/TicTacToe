@@ -90,7 +90,6 @@ namespace TicTacToe
                 {
                     shapes[i] = spaces[i].GetOccupant().GetShape().ToString();
                 }
-                Console.WriteLine($"Assigning shape {shapes[i]} to the space {i + 1}");
             }
 
             template += $"   |   |   \n";
