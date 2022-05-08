@@ -13,8 +13,8 @@ namespace TicTacToe
 
         public Position(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            SetX(x);
+            SetY(y);
         }
 
         public int GetX()

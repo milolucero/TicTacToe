@@ -31,5 +31,16 @@ namespace TicTacToe
             Console.WriteLine($"game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer()}");
             Console.WriteLine($"game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer()}");
         }
+
+        public static void TestBoard(Game game)
+        {
+            Console.WriteLine(game.GetBoard());
+        }
+
+        public static void TestOccupySpace(Game game)
+        {
+            game.OccupySpace(game.GetUserPlayer(), game.GetBoard().GetSpace(new Position(1, 0)));
+            game.OccupySpace(game.GetBotPlayer(), game.GetBoard().GetSpace(new Position(2, 0)));
+        }
     }
 }
