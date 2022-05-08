@@ -185,10 +185,24 @@ namespace TicTacToe
             Console.WriteLine("Tic-tac-toe");
 
             // Prompt user shape choice
-
             Shape userShapeChoice = GetUserShapeChoice();
 
-            Console.WriteLine(userShapeChoice.ToString());
+            // Instantiate a new game with the user's shape choice
+            Game game = new Game(userShapeChoice);
+
+            // Print the board
+            //while (!game.winner)
+            while (true)
+            {
+                Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.");
+
+                game.board.PrintBoard();
+                Console.WriteLine(board);
+
+                Space userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
+                OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
+                SwitchTurns();
+            }
         }
 
         /// <summary>
@@ -215,6 +229,41 @@ namespace TicTacToe
             }
 
             return userShapeChoice;
+        }
+
+        /// <summary>
+        /// Prompts the user to pick a space of the board to place its shape. Returns the chosen space.
+        /// </summary>
+        /// <returns>The space chosen by the user to place its shape.</returns>
+        public Space PromptPickSpaceToOccupy()
+        {
+            string spaceInput = "";
+            bool spaceInputIsInt = false;
+            bool spaceInputIsValidInt = false;
+            int spaceNumber = 0;
+
+            Space testingSpace = new Space(new Position(1,1));
+
+            do
+            {
+                Console.WriteLine($"Choose a space (1-9):");
+                spaceInput = Console.ReadLine();
+
+                spaceInputIsInt = int.TryParse(spaceInput, out spaceNumber);
+                spaceInputIsValidInt = spaceInputIsInt && (spaceNumber >= 1 && spaceNumber <= 9);
+
+                if (spaceInputIsValidInt)
+                {
+                    spaceNumber = int.Parse(spaceInput);
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid input \"{spaceInput}\". Please enter a number between 1 and 9.");
+                }
+
+            } while (!spaceInputIsValidInt);
+
+            return board.GetBoardSpaceFromInt(spaceNumber);
         }
 
         /// <summary>

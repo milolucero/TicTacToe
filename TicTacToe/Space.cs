@@ -12,7 +12,6 @@ namespace TicTacToe
     internal class Space
     {
         private readonly Position position;
-        private bool isOccupied;
         private Player? occupant;
 
         /// <summary>
@@ -60,6 +59,21 @@ namespace TicTacToe
         public void SetOccupant(Player? occupant)
         {
             this.occupant = occupant;
+        }
+
+        /// <summary>
+        /// Returns true if the space is occupied by a player, false otherwise.
+        /// </summary>
+        /// <returns>True if the space is occupied by a player, false otherwise.</returns>
+        public bool isOccupied()
+        {
+            return occupant != null;
+        }
+
+        public override string ToString()
+        {
+            string template = $"Space located at position ({GetPosition().GetX}, {GetPosition().GetY}). Occupied by {GetOccupant()}.";
+            return "";
         }
     }
 }

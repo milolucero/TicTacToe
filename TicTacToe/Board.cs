@@ -72,6 +72,51 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Prints the board.
+        /// </summary>
+        public void PrintBoard()
+        {
+            string template = "\n";
+
+            string[] shapes = new string[spaces.Length];
+
+            for (int i = 0; i < spaces.Length; i++)
+            {
+                if (spaces[i].GetOccupant() is null)
+                {
+                    shapes[i] = " ";
+                }
+                else
+                {
+                    shapes[i] = spaces[i].GetOccupant().GetShape().ToString();
+                }
+                Console.WriteLine($"Assigning shape {shapes[i]} to the space {i + 1}");
+            }
+
+            template += $"   |   |   \n";
+            template += $" {shapes[0]} | {shapes[1]} | {shapes[2]} \n";
+            template += $"___|___|___\n";
+            template += $"   |   |   \n";
+            template += $" {shapes[3]} | {shapes[4]} | {shapes[5]} \n";
+            template += $"___|___|___\n";
+            template += $"   |   |   \n";
+            template += $" {shapes[6]} | {shapes[7]} | {shapes[8]} \n";
+            template += $"   |   |   \n";
+
+            Console.WriteLine(template);
+        }
+
+        /// <summary>
+        /// Takes a number and returns the space of the board where the number would be located, starting from 1, going left-to-right and then top-to-bottom.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns>The space located in the board position represented by the number.</returns>
+        public Space GetBoardSpaceFromInt(int number)
+        {
+            return spaces[number - 1];
+        }
+
+        /// <summary>
         /// Returns a string representation of the board and its current state.
         /// </summary>
         /// <returns>A string representation of the board and its current state.</returns>
@@ -80,23 +125,15 @@ namespace TicTacToe
             string template = "";
 
             int count = 0;
-            for (int i = 0; i < this.height; i++)
+            for (int i = 0; i < height; i++)
             {
 
-                for (int j = 0; j < this.width; j++)
+                for (int j = 0; j < width; j++)
                 {
                     Space space = spaces[count];
 
-                    string shape = "";
-
-                    if (space.GetOccupant() == null)
-                    {
-                        shape = ".";
-                    }
-                    else
-                    {
-                        shape = space.GetOccupant().GetShape().ToString();
-                    }
+                    // Get a string representation of the shape in the given space, or "." if null.
+                    string shape = space.GetOccupant() is null ? "." : space.GetOccupant().GetShape().ToString();
 
                     template += $"{shape}";
                     count++;

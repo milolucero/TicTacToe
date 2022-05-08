@@ -1,1 +1,1 @@
-TicTacToe
+A simple Tic-tac-toe console game written in C# using object oriented programming principles.
