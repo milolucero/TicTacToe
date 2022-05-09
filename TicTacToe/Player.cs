@@ -14,7 +14,6 @@ namespace TicTacToe
         private readonly int id;
         private string name;
         private Shape shape;
-        private int score;
         private List<Space> occupiedSpaces;
         private bool hasTurn;
 
@@ -23,13 +22,11 @@ namespace TicTacToe
         /// </summary>
         /// <param name="id">The player's identifier. Since only two players are possible, it can only take the values 0 and 1.</param>
         /// <param name="name">The player's name.</param>
-        /// <param name="score">The player's score.</param>
         /// <param name="occupiedSpaces">A list of the spaces that are occupied by the player's shapes ("X" or "O").</param>
-        public Player(int id, string name, int score, List<Space> occupiedSpaces)
+        public Player(int id, string name, List<Space> occupiedSpaces)
         {
             this.id = id;
             SetName(name);
-            SetScore(score);
             this.occupiedSpaces = occupiedSpaces;
 
             // The player[0] has the first turn and is assigned the shape "X". The player[1] is assigned the shape "O".
@@ -57,18 +54,7 @@ namespace TicTacToe
         /// </summary>
         /// <param name="id">The player's identifier.</param>
         /// <param name="name">The player's name.</param>
-        /// <param name="score">The player's score.</param>
-        public Player(int id, string name, int score) : this(id, name, score, new List<Space>())
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Player, with specified id and name.
-        /// </summary>
-        /// <param name="id">The player's identifier.</param>
-        /// <param name="name">The player's name.</param>
-        public Player(int id, string name) : this(id, name, 0)
+        public Player(int id, string name) : this(id, name, new List<Space>())
         {
 
         }
@@ -128,24 +114,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Gets the current score of the player.
-        /// </summary>
-        /// <returns>The current score of the player.</returns>
-        public int GetScore()
-        {
-            return score;
-        }
-
-        /// <summary>
-        /// Sets the score of the player.
-        /// </summary>
-        /// <param name="score">The new score of the player.</param>
-        public void SetScore(int score)
-        {
-            this.score = score;
-        }
-
-        /// <summary>
         /// Returns true if the player currently has the turn to play, false otherwise.
         /// </summary>
         /// <returns>True if the player currently has the turn to play, false otherwise.</returns>
@@ -196,7 +164,6 @@ namespace TicTacToe
             template += $"id: {id}\n";
             template += $"name: {name}\n";
             template += $"shape: {shape}\n";
-            template += $"score: {score}\n";
             template += $"hasTurn: {hasTurn}\n\n";
             return template;
         }
