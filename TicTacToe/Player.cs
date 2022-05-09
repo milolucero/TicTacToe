@@ -45,7 +45,7 @@ namespace TicTacToe
             }
             else
             {
-                Console.WriteLine("Error: The game can only have 2 players.");
+                throw new Exception("Error: The game can only have 2 players.");
             }
         }
 

@@ -138,7 +138,7 @@ namespace TicTacToe
             }
             else
             {
-                Console.WriteLine("Error: Unrecognized shape.");
+                throw new Exception("Error: Unrecognized shape.");
             }
 
             // Set player names

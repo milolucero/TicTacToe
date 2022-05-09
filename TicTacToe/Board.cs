@@ -230,20 +230,20 @@ namespace TicTacToe
             }
 
             template += $"   |   |   \n";
-            template += $" {shapes[0]} | {shapes[1]} | {shapes[2]} \n";
+            template += $" {shapes[6]} | {shapes[7]} | {shapes[8]} \n";
             template += $"___|___|___\n";
             template += $"   |   |   \n";
             template += $" {shapes[3]} | {shapes[4]} | {shapes[5]} \n";
             template += $"___|___|___\n";
             template += $"   |   |   \n";
-            template += $" {shapes[6]} | {shapes[7]} | {shapes[8]} \n";
+            template += $" {shapes[0]} | {shapes[1]} | {shapes[2]} \n";
             template += $"   |   |   \n";
 
             Console.WriteLine(template);
         }
 
         /// <summary>
-        /// Takes a number and returns the space of the board where the number would be located, starting from 1, going left-to-right and then top-to-bottom.
+        /// Takes a number and returns the space of the board where the number would be located, starting from 1, going left-to-right, bottom-to-top.
         /// </summary>
         /// <param name="number"></param>
         /// <returns>The space located in the board position represented by the number.</returns>
@@ -263,7 +263,6 @@ namespace TicTacToe
             int count = 0;
             for (int i = 0; i < height; i++)
             {
-
                 for (int j = 0; j < width; j++)
                 {
                     Space space = spaces[count];
