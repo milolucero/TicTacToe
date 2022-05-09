@@ -22,8 +22,7 @@ namespace TicTacToe
         /// <summary>
         /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
         /// </summary>
-        /// <param name="userShapeChoice">The side/shape (either "X" or "O") chosen by the user.</param>
-        public Game(Shape userShapeChoice)
+        public Game()
         {
             board = new Board();
 
@@ -37,22 +36,8 @@ namespace TicTacToe
             // player[0] (X) always has the first turn.
             currentTurnPlayer = players[0];
 
+            // Initialize turn counter
             countOfTurns = 0;
-
-            // Set user player shape choice (either X or O, player with shape X always has the first turn).
-            SetUserPlayer(userShapeChoice);
-
-            //Set player names
-            userPlayer.SetName("You");
-            botPlayer.SetName("Bot");
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Game class with no arguments, assigning the side/shape "X" by default to the user.
-        /// </summary>
-        public Game() : this(Shape.X)
-        {
-
         }
 
         /// <summary>
@@ -147,6 +132,10 @@ namespace TicTacToe
             {
                 Console.WriteLine("Error: Unrecognized shape.");
             }
+
+            // Set player names
+            userPlayer.SetName("You");
+            botPlayer.SetName("Bot");
         }
 
         /// <summary>
@@ -192,7 +181,8 @@ namespace TicTacToe
             // Prompt user shape choice
             Shape userShapeChoice = GetUserShapeChoice();
 
-
+            // Set user player shape choice (either X or O, player with shape X always has the first turn).
+            SetUserPlayer(userShapeChoice);
 
             // Instantiate a new game with the user's shape choice
             // new Game(userShapeChoice);
