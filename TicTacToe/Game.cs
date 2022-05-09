@@ -20,6 +20,7 @@ namespace TicTacToe
         private int turnCount;
         private int drawCount;
         private List<Player?> winHistory;
+        private bool gameIsOver;
 
         /// <summary>
         /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
@@ -46,6 +47,9 @@ namespace TicTacToe
 
             //Initialize win history
             winHistory = new List<Player?>();
+
+            //Initialize game is over
+            gameIsOver = false;
         }
 
         /// <summary>
@@ -156,6 +160,24 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Returns true if the game is over (last turn found a winner or a draw); otherwise, false.
+        /// </summary>
+        /// <returns>True if the game is over (last turn found a winner or a draw); otherwise, false.</returns>
+        public bool GetGameIsOver()
+        {
+            return gameIsOver;
+        }
+
+        /// <summary>
+        /// Sets the state of the game to be over or not.
+        /// </summary>
+        /// <param name="gameIsOver">True if the game is over; otherwise, false.</param>
+        public void SetGameIsOver(bool gameIsOver)
+        {
+            this.gameIsOver = gameIsOver;
+        }
+
+        /// <summary>
         /// Sets a player's shape into a specific space. Returns true if the space was taken succesfully, false if it was already occupied.
         /// </summary>
         /// <param name="player">The player that should occupy the space.</param>
@@ -200,9 +222,8 @@ namespace TicTacToe
 
             // Print the board
             //while (!game.winner)
-            while (true)
+            while (!GetGameIsOver())
             {
-                Test.TestEmptySpaces(board);
                 NewTurn();
             }
         }
@@ -228,11 +249,27 @@ namespace TicTacToe
 
             OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
 
+            // Print current state of the board
             board.PrintBoard();
 
-            CheckGameResult();
+            // Check if there was a winner or a draw
+            SetGameIsOver(CheckGameResult());
 
-            SwitchTurns();
+            if (GetGameIsOver())
+            {
+                Player? lastWinner = winHistory[winHistory.Count - 1];
+                DisplayWinner(lastWinner);
+                DisplayPlayersScore();
+
+                if (PromptPlayAgain())
+                {
+                    RestartGame();
+                }
+            }
+            else
+            {
+                SwitchTurns();
+            }
         }
 
         /// <summary>
@@ -258,6 +295,23 @@ namespace TicTacToe
             bool hasWinnerOrDraw = (hasWinner || hasDraw);
 
             return hasWinnerOrDraw;
+        }
+
+
+        public void RestartGame()
+        {
+            board = new Board();
+
+            turnCount = 0;
+
+            foreach (Player player in players)
+            {
+                player.ResetOccupiedSpaces();
+            }
+
+            SetGameIsOver(false);
+
+            NewGame();
         }
 
         /// <summary>
@@ -300,8 +354,6 @@ namespace TicTacToe
             bool spaceInputIsValidInt = false;
             int spaceNumber = 0;
 
-            Space testingSpace = new Space(new Position(1,1));
-
             do
             {
                 Console.Write($"Choose a space (1-9): ");
@@ -322,6 +374,71 @@ namespace TicTacToe
             } while (!spaceInputIsValidInt);
 
             return board.GetBoardSpaceFromInt(spaceNumber);
+        }
+
+
+        public bool PromptPlayAgain()
+        {
+            bool playAgain = false;
+
+            do
+            {
+                Console.Write("Play again? (Y/n):");
+                string userInput = Console.ReadLine();
+
+                if (userInput.ToLower() == "y" || userInput.ToLower() == "")
+                {
+                    playAgain = true;
+                    break;
+                }
+                else if (userInput.ToLower() == "n")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input.");
+                }
+            } while (true);
+
+            return playAgain;
+        }
+
+        /// <summary>
+        /// Prints a message declaring the winner or a draw.
+        /// </summary>
+        /// <param name="winner">The Player who won or null if it was a draw.</param>
+        public void DisplayWinner(Player? winner)
+        {
+            string declareWinnerMessage = "";
+
+            declareWinnerMessage += "\n############\n";
+
+            if (winner is Player)
+            {
+                declareWinnerMessage += $"{winner.GetName()} ({winner.GetShape()}) won!";
+            }
+            else if (winner is null)
+            {
+                declareWinnerMessage += $"It's a draw!";
+            }
+
+            declareWinnerMessage += "\n############\n";
+
+            Console.WriteLine(declareWinnerMessage);
+        }
+
+        /// <summary>
+        /// Prints a message with the current score of all the players.
+        /// </summary>
+        public void DisplayPlayersScore()
+        {
+            string scoreMessage = "";
+            scoreMessage += "SCORE\n";
+            scoreMessage += $"{userPlayer.GetName()}: {userPlayer.GetScore()}\n";            
+            scoreMessage += $"{botPlayer.GetName()}: {botPlayer.GetScore()}\n";
+
+            Console.WriteLine(scoreMessage);
         }
 
         /// <summary>

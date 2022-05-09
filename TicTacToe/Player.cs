@@ -163,6 +163,23 @@ namespace TicTacToe
             this.hasTurn = hasTurn;
         }
 
+        /// <summary>
+        /// Returns a list of the spaces currently occupied by the player.
+        /// </summary>
+        /// <returns>A list of the spaces currently occupied by the player.</returns>
+        public List<Space> GetOccupiedSpaces()
+        {
+            return occupiedSpaces;
+        }
+
+        /// <summary>
+        /// Empties the list of spaces occupied by the player.
+        /// </summary>
+        public void ResetOccupiedSpaces()
+        {
+            occupiedSpaces = new List<Space>();
+        }
+
         public void AddToOccupiedSpaces(Space space)
         {
             occupiedSpaces.Add(space);

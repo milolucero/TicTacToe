@@ -130,7 +130,6 @@ namespace TicTacToe
                 {
                     hasWinner = true;
                     winner = spaces[0].GetOccupant();
-                    Console.WriteLine($"{spaces[0].GetOccupant().GetName()} WINNER!!! spaces[0]");
                 }
             }
 
@@ -140,7 +139,6 @@ namespace TicTacToe
                 {
                     hasWinner = true;
                     winner = spaces[1].GetOccupant();
-                    Console.WriteLine($"{spaces[1].GetOccupant().GetName()} WINNER!!! spaces[1]");
                 }
             }
 
@@ -151,7 +149,6 @@ namespace TicTacToe
                 {
                     hasWinner = true;
                     winner = spaces[2].GetOccupant();
-                    Console.WriteLine($"{spaces[2].GetOccupant().GetName()} WINNER!!! spaces[2]");
                 }
             }
 
@@ -161,7 +158,6 @@ namespace TicTacToe
                 {
                     hasWinner = true;
                     winner = spaces[3].GetOccupant();
-                    Console.WriteLine($"{spaces[3].GetOccupant().GetName()} WINNER!!! spaces[3]");
                 }
             }
 
@@ -171,7 +167,6 @@ namespace TicTacToe
                 {
                     hasWinner = true;
                     winner = spaces[6].GetOccupant();
-                    Console.WriteLine($"{spaces[6].GetOccupant().GetName()} WINNER!!! spaces[6]");
                 }
             }
 
