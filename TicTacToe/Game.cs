@@ -201,9 +201,7 @@ namespace TicTacToe
         /// </summary>
         public void NewTurn()
         {
-            Console.WriteLine($"\nTurn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})\n");
-
-            board.PrintBoard();
+            Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
 
             // Prompt user to pick a space. Keep prompting until an empty space is chose.
             Space userChoiceOfSpaceToOccupy;
@@ -218,6 +216,10 @@ namespace TicTacToe
             } while (userChoiceOfSpaceToOccupy.isOccupied());
 
             OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
+
+            board.PrintBoard();
+
+            board.CheckWin();
 
             SwitchTurns();
         }
@@ -245,6 +247,8 @@ namespace TicTacToe
                     Console.WriteLine("Invalid side. Please try again.\n");
                 }
             }
+
+            Console.WriteLine();
 
             return userShapeChoice;
         }

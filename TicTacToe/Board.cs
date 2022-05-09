@@ -51,6 +51,94 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Checks if there is a winner. Returns a tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.
+        /// </summary>
+        /// <returns>A tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.</returns>
+        public (bool hasWinner, Player? winner) CheckWin()
+        {
+            bool hasWinner = false;
+            Player? winner = null;
+
+            // Idea: We only need to check the surroundings of the last placed shape.
+
+            // Ways of winning for space[0]
+            int[] wayOfWinning1 = { 0, 1, 2 };
+            int[] wayOfWinning2 = { 0, 3, 6 };
+            int[] wayOfWinning3 = { 0, 4, 8 };
+
+            // Ways of winning for space[1]
+            int[] wayOfWinning4 = { 1, 4, 7 };
+
+            // Ways of winning for space[2]
+            int[] wayOfWinning5 = { 2, 5, 8 };
+            int[] wayOfWinning6 = { 2, 4, 6 };
+
+            // Ways of winning for space[3]
+            int[] wayOfWinning7 = { 3, 4, 5 };
+
+            // Ways of winning for space[6]
+            int[] wayOfWinning8 = { 6, 7, 8 };
+
+
+            int[][] waysOfWinning = { wayOfWinning1, wayOfWinning2, wayOfWinning3, wayOfWinning4, wayOfWinning5, wayOfWinning6, wayOfWinning7, wayOfWinning8 };
+
+            if (spaces[0].isOccupied())
+            {
+                if ((spaces[wayOfWinning1[0]].GetOccupant() == spaces[wayOfWinning1[1]].GetOccupant() && spaces[wayOfWinning1[1]].GetOccupant() == spaces[wayOfWinning1[2]].GetOccupant()) ||
+                    (spaces[wayOfWinning2[0]].GetOccupant() == spaces[wayOfWinning2[1]].GetOccupant() && spaces[wayOfWinning2[1]].GetOccupant() == spaces[wayOfWinning2[2]].GetOccupant()) ||
+                    (spaces[wayOfWinning3[0]].GetOccupant() == spaces[wayOfWinning3[1]].GetOccupant() && spaces[wayOfWinning3[1]].GetOccupant() == spaces[wayOfWinning3[2]].GetOccupant()))
+                {
+                    hasWinner = true;
+                    winner = spaces[0].GetOccupant();
+                    Console.WriteLine($"{spaces[0].GetOccupant().GetName()} WINNER!!! spaces[0]");
+                }
+            }
+
+            if (spaces[1].isOccupied())
+            {
+                if (spaces[wayOfWinning4[0]].GetOccupant() == spaces[wayOfWinning4[1]].GetOccupant() && spaces[wayOfWinning4[1]].GetOccupant() == spaces[wayOfWinning4[2]].GetOccupant())
+                {
+                    hasWinner = true;
+                    winner = spaces[1].GetOccupant();
+                    Console.WriteLine($"{spaces[1].GetOccupant().GetName()} WINNER!!! spaces[1]");
+                }
+            }
+
+            if (spaces[2].isOccupied())
+            {
+                if ((spaces[wayOfWinning5[0]].GetOccupant() == spaces[wayOfWinning5[1]].GetOccupant() && spaces[wayOfWinning5[1]].GetOccupant() == spaces[wayOfWinning5[2]].GetOccupant()) ||
+                    (spaces[wayOfWinning6[0]].GetOccupant() == spaces[wayOfWinning6[1]].GetOccupant() && spaces[wayOfWinning6[1]].GetOccupant() == spaces[wayOfWinning6[2]].GetOccupant()))
+                {
+                    hasWinner = true;
+                    winner = spaces[2].GetOccupant();
+                    Console.WriteLine($"{spaces[2].GetOccupant().GetName()} WINNER!!! spaces[2]");
+                }
+            }
+
+            if (spaces[3].isOccupied())
+            {
+                if (spaces[wayOfWinning7[0]].GetOccupant() == spaces[wayOfWinning7[1]].GetOccupant() && spaces[wayOfWinning7[1]].GetOccupant() == spaces[wayOfWinning7[2]].GetOccupant())
+                {
+                    hasWinner = true;
+                    winner = spaces[3].GetOccupant();
+                    Console.WriteLine($"{spaces[3].GetOccupant().GetName()} WINNER!!! spaces[3]");
+                }
+            }
+
+            if (spaces[6].isOccupied())
+            {
+                if (spaces[wayOfWinning8[0]].GetOccupant() == spaces[wayOfWinning8[1]].GetOccupant() && spaces[wayOfWinning8[1]].GetOccupant() == spaces[wayOfWinning8[2]].GetOccupant())
+                {
+                    hasWinner = true;
+                    winner = spaces[6].GetOccupant();
+                    Console.WriteLine($"{spaces[6].GetOccupant().GetName()} WINNER!!! spaces[6]");
+                }
+            }
+
+            return (hasWinner, winner);
+        }
+
+        /// <summary>
         /// Returns the space instance located at the specified position of the board.
         /// </summary>
         /// <param name="position">An instance of the Position class with specified (x, y) coordinate values.</param>
