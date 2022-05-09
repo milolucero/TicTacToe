@@ -15,7 +15,7 @@ namespace TicTacToe
         private string name;
         private Shape shape;
         private int score;
-        private Space[] occupiedSpaces;
+        private List<Space> occupiedSpaces;
         private bool hasTurn;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace TicTacToe
         /// <param name="name">The player's name.</param>
         /// <param name="score">The player's score.</param>
         /// <param name="occupiedSpaces">A list of the spaces that are occupied by the player's shapes ("X" or "O").</param>
-        public Player(int id, string name, int score, Space[] occupiedSpaces)
+        public Player(int id, string name, int score, List<Space> occupiedSpaces)
         {
             this.id = id;
             SetName(name);
@@ -58,7 +58,7 @@ namespace TicTacToe
         /// <param name="id">The player's identifier.</param>
         /// <param name="name">The player's name.</param>
         /// <param name="score">The player's score.</param>
-        public Player(int id, string name, int score) : this(id, name, score, new Space[0])
+        public Player(int id, string name, int score) : this(id, name, score, new List<Space>())
         {
 
         }
@@ -161,6 +161,11 @@ namespace TicTacToe
         public void SetHasTurn(bool hasTurn)
         {
             this.hasTurn = hasTurn;
+        }
+
+        public void AddToOccupiedSpaces(Space space)
+        {
+            occupiedSpaces.Add(space);
         }
 
         /// <summary>

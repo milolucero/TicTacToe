@@ -17,7 +17,9 @@ namespace TicTacToe
         private Player botPlayer;
         private Player currentTurnPlayer;
         private int nextAssignableId;
-        private int countOfTurns;
+        private int turnCount;
+        private int drawCount;
+        private List<Player?> winHistory;
 
         /// <summary>
         /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
@@ -37,7 +39,13 @@ namespace TicTacToe
             currentTurnPlayer = players[0];
 
             // Initialize turn counter
-            countOfTurns = 0;
+            turnCount = 0;
+
+            // Initialize draw counter
+            drawCount = 0;
+
+            //Initialize win history
+            winHistory = new List<Player?>();
         }
 
         /// <summary>
@@ -160,6 +168,7 @@ namespace TicTacToe
             if (!space.isOccupied())
             {
                 space.SetOccupant(player);
+                player.AddToOccupiedSpaces(space);
 
                 List<Space> emptySpaces = board.GetEmptySpaces();
                 emptySpaces.Remove(space);
@@ -226,10 +235,29 @@ namespace TicTacToe
             SwitchTurns();
         }
 
-        public void CheckGameResult()
+        /// <summary>
+        /// Returns true if the game has either a winner or a draw; otherwise, false.
+        /// </summary>
+        /// <returns>True if the game has either a winner or a draw; otherwise, false.</returns>
+        public bool CheckGameResult()
         {
-            board.CheckWin();
-            board.CheckDraw();
+            (bool hasWinner, Player? winner) = board.CheckWin();
+            bool hasDraw = board.CheckDraw();
+
+            if (hasWinner)
+            {
+                winHistory.Add(winner);
+                winner.SetScore(winner.GetScore() + 1);
+            }
+            else if (hasDraw)
+            {
+                winHistory.Add(null);
+                drawCount++;
+            }
+
+            bool hasWinnerOrDraw = (hasWinner || hasDraw);
+
+            return hasWinnerOrDraw;
         }
 
         /// <summary>
@@ -306,7 +334,7 @@ namespace TicTacToe
             template += $"--Game--\n\n";
 
             template += $"-Game info-\n";
-            template += $"countOfTurns: {countOfTurns}\n";
+            template += $"countOfTurns: {turnCount}\n";
             template += $"nextAssignableId: {nextAssignableId}\n";
             template += $"currentTurnPlayer: {currentTurnPlayer.GetId()}\n";
             template += $"GetCurrentTurnPlayer(): {GetCurrentTurnPlayer().GetId()}\n";

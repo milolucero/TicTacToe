@@ -178,12 +178,20 @@ namespace TicTacToe
             return (hasWinner, winner);
         }
 
-        public void CheckDraw()
+        /// <summary>
+        /// Checks if there is a draw.
+        /// </summary>
+        public bool CheckDraw()
         {
+            bool isDraw = false;
+
             if (emptySpaces.Count() == 0)
             {
+                isDraw = true;
                 Console.WriteLine("IT'S A DRAW!");
             }
+
+            return isDraw;
         }
 
         /// <summary>
@@ -202,9 +210,8 @@ namespace TicTacToe
                 }
             }
 
-            return null;
             // If no result was found
-            Console.WriteLine("Error: No space matched the given position.");
+            throw new Exception($"Error: No space matched the position ({position.GetX()}, {position.GetY()}).");
         }
 
         /// <summary>
