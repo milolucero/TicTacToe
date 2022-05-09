@@ -9,7 +9,7 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            Game game = new Game(Shape.X);
+            Game game = new Game();
 
             // Test.Test1(game);
             // Test2(game);

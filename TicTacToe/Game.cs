@@ -192,15 +192,17 @@ namespace TicTacToe
             // Prompt user shape choice
             Shape userShapeChoice = GetUserShapeChoice();
 
+
+
             // Instantiate a new game with the user's shape choice
-            Game game = new Game(userShapeChoice);
+            // new Game(userShapeChoice);
+            //Game game = new Game(userShapeChoice);
 
             // Print the board
             //while (!game.winner)
             while (true)
             {
                 NewTurn();
-                SwitchTurns();
             }
         }
 
@@ -209,7 +211,7 @@ namespace TicTacToe
         /// </summary>
         public void NewTurn()
         {
-            Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.\n");
+            Console.WriteLine($"\nTurn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})\n");
 
             board.PrintBoard();
 
@@ -221,11 +223,13 @@ namespace TicTacToe
 
                 if (userChoiceOfSpaceToOccupy.isOccupied())
                 {
-                    Console.WriteLine("The chosen space is taken. Pick another one.");
+                    Console.WriteLine("The chosen space is taken. Pick another one.\n");
                 }
             } while (userChoiceOfSpaceToOccupy.isOccupied());
 
             OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
+
+            SwitchTurns();
         }
 
         /// <summary>
@@ -237,7 +241,7 @@ namespace TicTacToe
             Shape userShapeChoice = Shape.None;
             while (userShapeChoice == Shape.None)
             {
-                Console.WriteLine("Choose a side. Enter \"X\" or \"O\" (case insensitive).");
+                Console.Write("Choose a side. Enter \"X\" or \"O\" (case insensitive): ");
                 string userInput = Console.ReadLine().ToUpper();
 
                 // Check if the given user input matches a Shape.
@@ -248,7 +252,7 @@ namespace TicTacToe
                 }
                 else
                 {
-                    Console.WriteLine("Invalid side. Please try again.");
+                    Console.WriteLine("Invalid side. Please try again.\n");
                 }
             }
 
@@ -270,7 +274,7 @@ namespace TicTacToe
 
             do
             {
-                Console.WriteLine($"Choose a space (1-9):");
+                Console.Write($"Choose a space (1-9): ");
                 spaceInput = Console.ReadLine();
 
                 spaceInputIsInt = int.TryParse(spaceInput, out spaceNumber);
@@ -282,7 +286,7 @@ namespace TicTacToe
                 }
                 else
                 {
-                    Console.WriteLine($"Invalid input \"{spaceInput}\". Please enter a number between 1 and 9.");
+                    Console.WriteLine($"Invalid input \"{spaceInput}\". Please enter a number between 1 and 9.\n");
                 }
 
             } while (!spaceInputIsValidInt);

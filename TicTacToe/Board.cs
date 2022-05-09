@@ -76,7 +76,7 @@ namespace TicTacToe
         /// </summary>
         public void PrintBoard()
         {
-            string template = "\n";
+            string template = "";
 
             string[] shapes = new string[spaces.Length];
 
