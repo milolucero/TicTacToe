@@ -183,7 +183,7 @@ namespace TicTacToe
         {
             bool spaceOccupiedSuccessfully = false;
 
-            if (!space.isOccupied())
+            if (!space.IsOccupied())
             {
                 space.SetOccupant(player);
                 player.AddToOccupiedSpaces(space);
@@ -231,17 +231,8 @@ namespace TicTacToe
         {
             Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
 
-            // Prompt user to pick a space. Keep prompting until an empty space is chose.
-            Space userChoiceOfSpaceToOccupy;
-            do
-            {
-                userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
-
-                if (userChoiceOfSpaceToOccupy.isOccupied())
-                {
-                    Console.WriteLine("The chosen space is taken. Pick another one.\n");
-                }
-            } while (userChoiceOfSpaceToOccupy.isOccupied());
+            Space userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
+            // Space botChoiceOfSpaceToOccupy = BotArtificialIntelligence.GetMove();
 
             OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
 
@@ -352,29 +343,42 @@ namespace TicTacToe
         /// <returns>The space chosen by the user to place its shape.</returns>
         public Space PromptPickSpaceToOccupy()
         {
-            string spaceInput = "";
-            bool spaceInputIsInt = false;
-            bool spaceInputIsValidInt = false;
-            int spaceNumber = 0;
+            Space chosenSpace;
+            string spaceInput;
+            bool spaceInputIsInt;
+            bool spaceInputIsValidInt;
+            bool spaceIsValid = false;
+            int spaceNumber;
 
             do
             {
                 Console.Write($"Choose a space (1-9): ");
                 spaceInput = Console.ReadLine();
 
+                // Validate if input is an int between 1 and 9
                 spaceInputIsInt = int.TryParse(spaceInput, out spaceNumber);
                 spaceInputIsValidInt = spaceInputIsInt && (spaceNumber >= 1 && spaceNumber <= 9);
 
                 if (spaceInputIsValidInt)
                 {
                     spaceNumber = int.Parse(spaceInput);
+                    chosenSpace = board.GetBoardSpaceFromInt(spaceNumber);
+
+                    // Validate if chosen space is already taken.
+                    if (chosenSpace.IsOccupied())
+                    {
+                        Console.WriteLine("The chosen space is taken. Pick another one.\n");
+                    }
+                    else
+                    {
+                        spaceIsValid = true;
+                    }
                 }
                 else
                 {
                     Console.WriteLine($"Invalid input \"{spaceInput}\". Please enter a number between 1 and 9.\n");
                 }
-
-            } while (!spaceInputIsValidInt);
+            } while (!spaceIsValid);
 
             return board.GetBoardSpaceFromInt(spaceNumber);
         }

@@ -72,7 +72,7 @@ namespace TicTacToe
 
             foreach (Space space in spaces)
             {
-                if (!space.isOccupied())
+                if (!space.IsOccupied())
                 {
                     emptySpaces.Add(space);
                 }
@@ -122,7 +122,7 @@ namespace TicTacToe
 
             int[][] waysOfWinning = { wayOfWinning1, wayOfWinning2, wayOfWinning3, wayOfWinning4, wayOfWinning5, wayOfWinning6, wayOfWinning7, wayOfWinning8 };
 
-            if (spaces[0].isOccupied())
+            if (spaces[0].IsOccupied())
             {
                 if ((spaces[wayOfWinning1[0]].GetOccupant() == spaces[wayOfWinning1[1]].GetOccupant() && spaces[wayOfWinning1[1]].GetOccupant() == spaces[wayOfWinning1[2]].GetOccupant()) ||
                     (spaces[wayOfWinning2[0]].GetOccupant() == spaces[wayOfWinning2[1]].GetOccupant() && spaces[wayOfWinning2[1]].GetOccupant() == spaces[wayOfWinning2[2]].GetOccupant()) ||
@@ -133,7 +133,7 @@ namespace TicTacToe
                 }
             }
 
-            if (spaces[1].isOccupied())
+            if (spaces[1].IsOccupied())
             {
                 if (spaces[wayOfWinning4[0]].GetOccupant() == spaces[wayOfWinning4[1]].GetOccupant() && spaces[wayOfWinning4[1]].GetOccupant() == spaces[wayOfWinning4[2]].GetOccupant())
                 {
@@ -142,7 +142,7 @@ namespace TicTacToe
                 }
             }
 
-            if (spaces[2].isOccupied())
+            if (spaces[2].IsOccupied())
             {
                 if ((spaces[wayOfWinning5[0]].GetOccupant() == spaces[wayOfWinning5[1]].GetOccupant() && spaces[wayOfWinning5[1]].GetOccupant() == spaces[wayOfWinning5[2]].GetOccupant()) ||
                     (spaces[wayOfWinning6[0]].GetOccupant() == spaces[wayOfWinning6[1]].GetOccupant() && spaces[wayOfWinning6[1]].GetOccupant() == spaces[wayOfWinning6[2]].GetOccupant()))
@@ -152,7 +152,7 @@ namespace TicTacToe
                 }
             }
 
-            if (spaces[3].isOccupied())
+            if (spaces[3].IsOccupied())
             {
                 if (spaces[wayOfWinning7[0]].GetOccupant() == spaces[wayOfWinning7[1]].GetOccupant() && spaces[wayOfWinning7[1]].GetOccupant() == spaces[wayOfWinning7[2]].GetOccupant())
                 {
@@ -161,7 +161,7 @@ namespace TicTacToe
                 }
             }
 
-            if (spaces[6].isOccupied())
+            if (spaces[6].IsOccupied())
             {
                 if (spaces[wayOfWinning8[0]].GetOccupant() == spaces[wayOfWinning8[1]].GetOccupant() && spaces[wayOfWinning8[1]].GetOccupant() == spaces[wayOfWinning8[2]].GetOccupant())
                 {

@@ -65,7 +65,7 @@ namespace TicTacToe
         /// Returns true if the space is occupied by a player, false otherwise.
         /// </summary>
         /// <returns>True if the space is occupied by a player, false otherwise.</returns>
-        public bool isOccupied()
+        public bool IsOccupied()
         {
             return occupant != null;
         }
