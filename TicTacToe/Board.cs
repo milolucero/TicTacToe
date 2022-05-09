@@ -183,7 +183,6 @@ namespace TicTacToe
             if (emptySpaces.Count() == 0)
             {
                 isDraw = true;
-                Console.WriteLine("IT'S A DRAW!");
             }
 
             return isDraw;

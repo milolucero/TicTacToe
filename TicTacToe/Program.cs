@@ -1,9 +1,9 @@
 ﻿using System;
+
 namespace TicTacToe
 {
-
     /// <summary>
-    /// A simple tic-tac-toe game in console.
+    /// A simple Tic-tac-toe console game using object oriented programming principles.
     /// </summary>
     class Program
     {
@@ -11,12 +11,8 @@ namespace TicTacToe
         {
             Game game = new Game();
 
-            // Test.Test1(game);
-            // Test2(game);
-            
-            //Test.TestBoard(game);
-            //Test.TestOccupySpace(game);
-            //Test.TestBoard(game);
+            // Welcome message
+            Console.WriteLine("Tic-tac-toe V1.0");
 
             game.NewGame();
         }

@@ -15,10 +15,12 @@ namespace TicTacToe
         private Player[] players;
         private Player userPlayer;
         private Player botPlayer;
+        private int userScore;
+        private int botScore;
+        private int drawScore;
         private Player currentTurnPlayer;
         private int nextAssignableId;
         private int turnCount;
-        private int drawCount;
         private List<Player?> winHistory;
         private bool gameIsOver;
 
@@ -37,13 +39,7 @@ namespace TicTacToe
             }
 
             // player[0] (X) always has the first turn.
-            currentTurnPlayer = players[0];
-
-            // Initialize turn counter
-            turnCount = 0;
-
-            // Initialize draw counter
-            drawCount = 0;
+            SetCurrentTurnPlayer(players[0]);
 
             //Initialize win history
             winHistory = new List<Player?>();
@@ -211,8 +207,8 @@ namespace TicTacToe
         /// </summary>
         public void NewGame()
         {
-            // Welcome message
-            Console.WriteLine("Tic-tac-toe");
+            // player[0] (X) always has the first turn.
+            SetCurrentTurnPlayer(players[0]);
 
             // Prompt user shape choice
             Shape userShapeChoice = GetUserShapeChoice();
@@ -284,12 +280,19 @@ namespace TicTacToe
             if (hasWinner)
             {
                 winHistory.Add(winner);
-                winner.SetScore(winner.GetScore() + 1);
+                if (winner == userPlayer)
+                {
+                    userScore++;
+                }
+                else if (winner == botPlayer)
+                {
+                    botScore++;
+                }
             }
             else if (hasDraw)
             {
                 winHistory.Add(null);
-                drawCount++;
+                drawScore++;
             }
 
             bool hasWinnerOrDraw = (hasWinner || hasDraw);
@@ -383,7 +386,7 @@ namespace TicTacToe
 
             do
             {
-                Console.Write("Play again? (Y/n):");
+                Console.Write("Play again? (Y/n): ");
                 string userInput = Console.ReadLine();
 
                 if (userInput.ToLower() == "y" || userInput.ToLower() == "")
@@ -435,8 +438,9 @@ namespace TicTacToe
         {
             string scoreMessage = "";
             scoreMessage += "SCORE\n";
-            scoreMessage += $"{userPlayer.GetName()}: {userPlayer.GetScore()}\n";            
-            scoreMessage += $"{botPlayer.GetName()}: {botPlayer.GetScore()}\n";
+            scoreMessage += $"{userPlayer.GetName()}:  {userScore}\n";
+            scoreMessage += $"{botPlayer.GetName()}:  {botScore}\n";
+            scoreMessage += $"Draw: {drawScore}\n";
 
             Console.WriteLine(scoreMessage);
         }
