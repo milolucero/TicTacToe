@@ -199,14 +199,33 @@ namespace TicTacToe
             //while (!game.winner)
             while (true)
             {
-                Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.\n");
-
-                board.PrintBoard();
-
-                Space userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
-                OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
+                NewTurn();
                 SwitchTurns();
             }
+        }
+
+        /// <summary>
+        /// Starts a new turn.
+        /// </summary>
+        public void NewTurn()
+        {
+            Console.WriteLine($"{currentTurnPlayer.GetName()} has the turn.\n");
+
+            board.PrintBoard();
+
+            // Prompt user to pick a space. Keep prompting until an empty space is chose.
+            Space userChoiceOfSpaceToOccupy;
+            do
+            {
+                userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
+
+                if (userChoiceOfSpaceToOccupy.isOccupied())
+                {
+                    Console.WriteLine("The chosen space is taken. Pick another one.");
+                }
+            } while (userChoiceOfSpaceToOccupy.isOccupied());
+
+            OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
         }
 
         /// <summary>
@@ -221,6 +240,7 @@ namespace TicTacToe
                 Console.WriteLine("Choose a side. Enter \"X\" or \"O\" (case insensitive).");
                 string userInput = Console.ReadLine().ToUpper();
 
+                // Check if the given user input matches a Shape.
                 if (Enum.IsDefined(typeof(Shape), userInput))
                 {
                     // Convert the userInput string into its equivalent Shape.
