@@ -157,9 +157,14 @@ namespace TicTacToe
         {
             bool spaceOccupiedSuccessfully = false;
 
-            if (space.GetOccupant() == null)
+            if (!space.isOccupied())
             {
                 space.SetOccupant(player);
+
+                List<Space> emptySpaces = board.GetEmptySpaces();
+                emptySpaces.Remove(space);
+                board.SetEmptySpaces(emptySpaces);
+
                 spaceOccupiedSuccessfully = true;
             }
             else
@@ -184,14 +189,11 @@ namespace TicTacToe
             // Set user player shape choice (either X or O, player with shape X always has the first turn).
             SetUserPlayer(userShapeChoice);
 
-            // Instantiate a new game with the user's shape choice
-            // new Game(userShapeChoice);
-            //Game game = new Game(userShapeChoice);
-
             // Print the board
             //while (!game.winner)
             while (true)
             {
+                Test.TestEmptySpaces(board);
                 NewTurn();
             }
         }
@@ -219,9 +221,15 @@ namespace TicTacToe
 
             board.PrintBoard();
 
-            board.CheckWin();
+            CheckGameResult();
 
             SwitchTurns();
+        }
+
+        public void CheckGameResult()
+        {
+            board.CheckWin();
+            board.CheckDraw();
         }
 
         /// <summary>

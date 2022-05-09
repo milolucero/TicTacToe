@@ -14,6 +14,7 @@ namespace TicTacToe
         private readonly int height;
         private readonly int width;
         private Space[] spaces;
+        private List<Space> emptySpaces;
 
         /// <summary>
         /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
@@ -24,23 +25,32 @@ namespace TicTacToe
             height = Rule.GetBoardDimensions().height;
             width = Rule.GetBoardDimensions().width;
             this.spaces = spaces;
+            SetEmptySpaces(GetEmptySpaces());
         }
 
         /// <summary>
         /// Initializes a new instance of the Board class without arguments, filling the board with empty (unassigned) spaces.
         /// </summary>
-        public Board()
+        public Board() : this(GetArrayOfEmptySpacesForBoard(Rule.GetBoardDimensions().height, Rule.GetBoardDimensions().width))
         {
-            height = Rule.GetBoardDimensions().height;
-            width = Rule.GetBoardDimensions().width;
 
-            spaces = new Space[height * width];
+        }
+
+        /// <summary>
+        /// Returns an array of empty spaces for the specified board height and width.
+        /// </summary>
+        /// <param name="boardHeight">The height of the board.</param>
+        /// <param name="boardWidth">The width of the board.</param>
+        /// <returns>An array of empty spaces for the specified board height and width.</returns>
+        public static Space[] GetArrayOfEmptySpacesForBoard(int boardHeight, int boardWidth)
+        {
+            Space[] spaces = new Space[boardHeight * boardWidth];
 
             // Populate spaces array with new spaces at the specified coordinates
             int count = 0;
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < boardHeight; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < boardWidth; j++)
                 {
                     Position position = new Position(i, j);
                     spaces[count] = new Space(position);
@@ -48,6 +58,36 @@ namespace TicTacToe
                     count++;
                 }
             }
+
+            return spaces;
+        }
+
+        /// <summary>
+        /// Returns a list containing the currently empty spaces of the board.
+        /// </summary>
+        /// <returns>A list containing the currently empty spaces of the board.</returns>
+        public List<Space> GetEmptySpaces()
+        {
+            List<Space> emptySpaces = new List<Space>();
+
+            foreach (Space space in spaces)
+            {
+                if (!space.isOccupied())
+                {
+                    emptySpaces.Add(space);
+                }
+            }
+
+            return emptySpaces;
+        }
+
+        /// <summary>
+        /// Sets the empty spaces of the board to the specified list of empty spaces.
+        /// </summary>
+        /// <param name="emptySpaces">The list of empty spaces.</param>
+        public void SetEmptySpaces(List<Space> emptySpaces)
+        {
+            this.emptySpaces = emptySpaces;
         }
 
         /// <summary>
@@ -136,6 +176,14 @@ namespace TicTacToe
             }
 
             return (hasWinner, winner);
+        }
+
+        public void CheckDraw()
+        {
+            if (emptySpaces.Count() == 0)
+            {
+                Console.WriteLine("IT'S A DRAW!");
+            }
         }
 
         /// <summary>

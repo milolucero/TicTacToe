@@ -45,5 +45,14 @@ namespace TicTacToe
             game.OccupySpace(game.GetUserPlayer(), game.GetBoard().GetSpace(new Position(1, 0)));
             game.OccupySpace(game.GetBotPlayer(), game.GetBoard().GetSpace(new Position(2, 0)));
         }
+
+        public static void TestEmptySpaces(Board board)
+        {
+            List<Space> emptySpaces = board.GetEmptySpaces();
+            for (int i = 0; i < emptySpaces.Count(); i++)
+            {
+                Console.WriteLine(emptySpaces[i].ToString());
+            }
+        }
     }
 }

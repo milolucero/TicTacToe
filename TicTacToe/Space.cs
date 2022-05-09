@@ -72,8 +72,8 @@ namespace TicTacToe
 
         public override string ToString()
         {
-            string template = $"Space located at position ({GetPosition().GetX}, {GetPosition().GetY}). Occupied by {GetOccupant()}.";
-            return "";
+            string template = $"Space located at position ({GetPosition().GetX()}, {GetPosition().GetY()}). Occupied by {GetOccupant()}.";
+            return template;
         }
     }
 }
