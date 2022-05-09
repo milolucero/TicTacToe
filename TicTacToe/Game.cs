@@ -229,12 +229,27 @@ namespace TicTacToe
         /// </summary>
         public void NewTurn()
         {
-            Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
+            Space choiceOfSpaceToOccupy;
 
-            Space userChoiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
-            // Space botChoiceOfSpaceToOccupy = BotArtificialIntelligence.GetMove();
+            if (currentTurnPlayer == userPlayer)
+            {
+                Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
 
-            OccupySpace(currentTurnPlayer, userChoiceOfSpaceToOccupy);
+                choiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
+            } 
+            else if (currentTurnPlayer == botPlayer)
+            {
+                // This block should set the choiceOfSpaceToOccupy to the Space that the bot decides to take according to its decision model.
+
+                // Get a random empty space
+                choiceOfSpaceToOccupy = BotAI.GetRandomEmptySpace(board);
+            }
+            else
+            {
+                throw new Exception("Error: Invalid currentTurnPlayer. currentTurnPlayer is neither userPlayer nor botPlayer.");
+            }
+
+            OccupySpace(currentTurnPlayer, choiceOfSpaceToOccupy);
 
             // Print current state of the board
             board.PrintBoard();
@@ -317,7 +332,7 @@ namespace TicTacToe
             Shape userShapeChoice = Shape.None;
             while (userShapeChoice == Shape.None)
             {
-                Console.Write("Choose a side. Enter \"X\" or \"O\" (case insensitive): ");
+                Console.Write("Choose a side. Enter \"X\" or \"O\": ");
                 string userInput = Console.ReadLine().ToUpper();
 
                 // Check if the given user input matches a Shape.
@@ -407,6 +422,8 @@ namespace TicTacToe
                     Console.WriteLine("Invalid input.");
                 }
             } while (true);
+
+            Console.WriteLine();
 
             return playAgain;
         }
