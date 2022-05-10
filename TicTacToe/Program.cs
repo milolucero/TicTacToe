@@ -9,11 +9,11 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
-
-            // Welcome message
             Console.WriteLine("Tic-tac-toe V1.0");
+            Console.WriteLine("Author: Camilo Lucero");
+            Console.WriteLine("Email: cluceroespitia@rrc.ca\n");
 
+            Game game = new Game();
             game.NewGame();
         }
     }

@@ -17,12 +17,12 @@ namespace TicTacToe
         private Player botPlayer;
         private int userScore;
         private int botScore;
-        private int drawScore;
+        private int tieScore;
         private Player currentTurnPlayer;
         private int nextAssignableId;
         private int turnCount;
-        private List<Player?> winHistory;
-        private bool gameIsOver;
+        private List<GameResult> resultHistory;
+        // private bool gameIsOver;
 
         /// <summary>
         /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
@@ -42,10 +42,7 @@ namespace TicTacToe
             SetCurrentTurnPlayer(players[0]);
 
             //Initialize win history
-            winHistory = new List<Player?>();
-
-            //Initialize game is over
-            gameIsOver = false;
+            resultHistory = new List<GameResult>();
         }
 
         /// <summary>
@@ -77,7 +74,6 @@ namespace TicTacToe
         public Player GetCurrentTurnPlayer()
         {
             return currentTurnPlayer;
-            // return players[0].GetHasTurn() ? players[0] : players[1];
         }
 
         /// <summary>
@@ -156,24 +152,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns true if the game is over (last turn found a winner or a draw); otherwise, false.
-        /// </summary>
-        /// <returns>True if the game is over (last turn found a winner or a draw); otherwise, false.</returns>
-        public bool GetGameIsOver()
-        {
-            return gameIsOver;
-        }
-
-        /// <summary>
-        /// Sets the state of the game to be over or not.
-        /// </summary>
-        /// <param name="gameIsOver">True if the game is over; otherwise, false.</param>
-        public void SetGameIsOver(bool gameIsOver)
-        {
-            this.gameIsOver = gameIsOver;
-        }
-
-        /// <summary>
         /// Sets a player's shape into a specific space. Returns true if the space was taken succesfully, false if it was already occupied.
         /// </summary>
         /// <param name="player">The player that should occupy the space.</param>
@@ -216,9 +194,8 @@ namespace TicTacToe
             // Set user player shape choice (either X or O, player with shape X always has the first turn).
             SetUserPlayer(userShapeChoice);
 
-            // Print the board
-            //while (!game.winner)
-            while (!GetGameIsOver())
+            bool gameIsNotOver = (board.GetResult() == GameResult.Incomplete);
+            while (gameIsNotOver)
             {
                 NewTurn();
             }
@@ -254,15 +231,20 @@ namespace TicTacToe
             // Print current state of the board
             board.PrintBoard();
 
-            // Check if there was a winner or a draw
-            SetGameIsOver(CheckGameResult());
-
-            if (GetGameIsOver())
+            GameResult gameResult = Board.GetResultFromBoard(board);
+            bool gameIsOver = (gameResult != GameResult.Incomplete);
+            if (gameIsOver)
             {
-                Player? lastWinner = winHistory[winHistory.Count - 1];
-                DisplayWinner(lastWinner);
+                // Update state.
+                board.SetResult(gameResult);
+                UpdateScores();
+
+                // Display winner and scores.
+                GameResult lastResult = resultHistory[resultHistory.Count - 1];
+                DisplayWinner(lastResult);
                 DisplayPlayersScore();
 
+                // Restart game if user chooses to.
                 if (PromptPlayAgain())
                 {
                     RestartGame();
@@ -275,38 +257,62 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns true if the game has either a winner or a draw; otherwise, false.
+        /// Updates the state of the scores and result history. Should be called when a game is over (winner or tie).
         /// </summary>
-        /// <returns>True if the game has either a winner or a draw; otherwise, false.</returns>
-        public bool CheckGameResult()
+        /// <exception cref="Exception"></exception>
+        public void UpdateScores()
         {
-            (bool hasWinner, Player? winner) = board.CheckWin();
-            bool hasDraw = board.CheckDraw();
+            GameResult gameResult = board.GetResult();
+
+            if (gameResult == GameResult.Incomplete)
+            {
+                throw new Exception($"Scores can't be updated because game is incomplete.");
+            }
+
+            bool hasWinner = (board.GetResult() == GameResult.WinnerX) || (board.GetResult() == GameResult.WinnerO);
+            bool hasTie = board.GetResult() == GameResult.Tie;
 
             if (hasWinner)
             {
-                winHistory.Add(winner);
-                if (winner == userPlayer)
+                Player winnerPlayer;
+
+                // Determine winning Player
+                if (gameResult == GameResult.WinnerX)
+                {
+                    winnerPlayer = GetPlayerFromShape(Shape.X);
+                }
+                else if (gameResult == GameResult.WinnerO)
+                {
+                    winnerPlayer = GetPlayerFromShape(Shape.O);
+                }
+                else 
+                {
+                    throw new Exception($"No winner player can be determined from result \"{gameResult}\"");
+                }
+
+                // Update winning player scores
+                if (winnerPlayer == userPlayer)
                 {
                     userScore++;
                 }
-                else if (winner == botPlayer)
+                else if (winnerPlayer == botPlayer)
                 {
                     botScore++;
                 }
             }
-            else if (hasDraw)
+            // Update tie score
+            else if (hasTie)
             {
-                winHistory.Add(null);
-                drawScore++;
+                tieScore++;
             }
 
-            bool hasWinnerOrDraw = (hasWinner || hasDraw);
-
-            return hasWinnerOrDraw;
+            // Add the result to the result history.
+            resultHistory.Add(gameResult);
         }
 
-
+        /// <summary>
+        /// Resets the game to play a new round.
+        /// </summary>
         public void RestartGame()
         {
             board = new Board();
@@ -317,8 +323,6 @@ namespace TicTacToe
             {
                 player.ResetOccupiedSpaces();
             }
-
-            SetGameIsOver(false);
 
             NewGame();
         }
@@ -398,7 +402,10 @@ namespace TicTacToe
             return board.GetBoardSpaceFromInt(spaceNumber);
         }
 
-
+        /// <summary>
+        /// Prompts the user to play a new round of the game. Returns true is the user agrees; otherwise, false.
+        /// </summary>
+        /// <returns>True is the user wants to play a new round of the game; otherwise, false.</returns>
         public bool PromptPlayAgain()
         {
             bool playAgain = false;
@@ -429,22 +436,23 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Prints a message declaring the winner or a draw.
+        /// Prints a message declaring the winner or a tie.
         /// </summary>
-        /// <param name="winner">The Player who won or null if it was a draw.</param>
-        public void DisplayWinner(Player? winner)
+        /// <param name="gameResult">The result of the game.</param>
+        public void DisplayWinner(GameResult gameResult)
         {
             string declareWinnerMessage = "";
 
             declareWinnerMessage += "\n############\n";
 
-            if (winner is Player)
+            if (gameResult == GameResult.WinnerX || gameResult == GameResult.WinnerO)
             {
+                Player winner = GetPlayerFromResult(gameResult);
                 declareWinnerMessage += $"{winner.GetName()} ({winner.GetShape()}) won!";
             }
-            else if (winner is null)
+            else if (gameResult == GameResult.Tie)
             {
-                declareWinnerMessage += $"It's a draw!";
+                declareWinnerMessage += $"It's a tie!";
             }
 
             declareWinnerMessage += "\n############\n";
@@ -459,11 +467,50 @@ namespace TicTacToe
         {
             string scoreMessage = "";
             scoreMessage += "SCORE\n";
-            scoreMessage += $"{userPlayer.GetName()}:  {userScore}\n";
-            scoreMessage += $"{botPlayer.GetName()}:  {botScore}\n";
-            scoreMessage += $"Draw: {drawScore}\n";
+            scoreMessage += $"{userPlayer.GetName()}: {userScore}\n";
+            scoreMessage += $"{botPlayer.GetName()}: {botScore}\n";
+            scoreMessage += $"Tie: {tieScore}\n";
 
             Console.WriteLine(scoreMessage);
+        }
+
+        /// <summary>
+        /// Returns the player that matches the specified shape.
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <returns>The player that matches the specified shape.</returns>
+        /// <exception cref="Exception">Error if no player with the specified shape is found.</exception>
+        public Player GetPlayerFromShape(Shape shape)
+        {
+            foreach (Player player in players)
+            {
+                if (player.GetShape() == shape)
+                {
+                    return player;
+                }
+            }
+
+            throw new Exception($"No player was found with the shape {shape}.");
+        }
+
+        public Player GetPlayerFromResult(GameResult result)
+        {
+            Player player;
+
+            if (result == GameResult.WinnerX)
+            {
+                player = GetPlayerFromShape(Shape.X);
+            } 
+            else if (result == GameResult.WinnerO)
+            {
+                player = GetPlayerFromShape(Shape.O);
+            }
+            else
+            {
+                throw new Exception($"No player can be determined from the result \"{result}\".");
+            }
+
+            return player;
         }
 
         /// <summary>

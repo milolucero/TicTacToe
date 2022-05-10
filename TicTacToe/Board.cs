@@ -15,6 +15,8 @@ namespace TicTacToe
         private readonly int width;
         private Space[] spaces;
         private List<Space> emptySpaces;
+        private GameResult result;
+
 
         /// <summary>
         /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
@@ -26,6 +28,7 @@ namespace TicTacToe
             width = Rule.GetBoardDimensions().width;
             this.spaces = spaces;
             SetEmptySpaces(GetEmptySpaces());
+            SetResult(GameResult.Incomplete);
         }
 
         /// <summary>
@@ -34,6 +37,24 @@ namespace TicTacToe
         public Board() : this(GetArrayOfEmptySpacesForBoard(Rule.GetBoardDimensions().height, Rule.GetBoardDimensions().width))
         {
 
+        }
+
+        /// <summary>
+        /// Returns an array containing the board spaces.
+        /// </summary>
+        /// <returns>An array containing the board spaces.</returns>
+        public Space[] GetSpaces()
+        {
+            return spaces;
+        }
+
+        /// <summary>
+        /// Sets the spaces of the board to the specified array of spaces.
+        /// </summary>
+        /// <param name="spaces"></param>
+        public void SetSpaces(Space[] spaces)
+        {
+            this.spaces = spaces;
         }
 
         /// <summary>
@@ -174,18 +195,12 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Checks if there is a draw.
+        /// Checks if there is a tie.
         /// </summary>
-        public bool CheckDraw()
+        /// <returns>True if the board is tied (has no empty spaces left); otherwise, false.</returns>
+        public bool CheckTie()
         {
-            bool isDraw = false;
-
-            if (emptySpaces.Count() == 0)
-            {
-                isDraw = true;
-            }
-
-            return isDraw;
+            return emptySpaces.Count == 0;
         }
 
         /// <summary>
@@ -193,6 +208,7 @@ namespace TicTacToe
         /// </summary>
         /// <param name="position">An instance of the Position class with specified (x, y) coordinate values.</param>
         /// <returns>The space instance located at the specified position of the board.</returns>
+        /// <exception cref="Exception">If no result was found.</exception>
         public Space GetSpace(Position position)
         {
             foreach (Space space in spaces)
@@ -204,8 +220,7 @@ namespace TicTacToe
                 }
             }
 
-            // If no result was found
-            throw new Exception($"Error: No space matched the position ({position.GetX()}, {position.GetY()}).");
+            throw new Exception($"No space matched the position ({position.GetX()}, {position.GetY()}).");
         }
 
         /// <summary>
@@ -245,11 +260,68 @@ namespace TicTacToe
         /// <summary>
         /// Takes a number and returns the space of the board where the number would be located, starting from 1, going left-to-right, bottom-to-top.
         /// </summary>
-        /// <param name="number"></param>
+        /// <param name="number">The number of the space in the board, starting from 1, going left-to-right, bottom-to-top.</param>
         /// <returns>The space located in the board position represented by the number.</returns>
         public Space GetBoardSpaceFromInt(int number)
         {
             return spaces[number - 1];
+        }
+
+        /// <summary>
+        /// Returns the result of a given board.
+        /// </summary>
+        /// <param name="board">The board to examine for result.</param>
+        /// <returns>A GameResult representing the result of the given board.</returns>
+        public static GameResult GetResultFromBoard(Board board)
+        {
+            GameResult result;
+
+            (bool hasWinner, Player? winnerPlayer) = board.CheckWin();
+            bool hasTie = board.CheckTie();
+
+            if (hasWinner)
+            {
+                if (winnerPlayer.GetShape() == Shape.X)
+                {
+                    result = GameResult.WinnerX;
+                } 
+                else if (winnerPlayer.GetShape() == Shape.O)
+                {
+                    result = GameResult.WinnerO;
+                }
+                else
+                {
+                    throw new Exception($"No shape matched the winner player's shape ({winnerPlayer.GetShape()}).");
+                }
+            } 
+            else if (hasTie)
+            {
+                result = GameResult.Tie;
+            }
+            else
+            {
+                result = GameResult.Incomplete;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the result of the game.
+        /// </summary>
+        /// <returns>The result of the game.</returns>
+        public GameResult GetResult()
+        {
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the result of the game.
+        /// </summary>
+        /// <param name="result">The result of the game.</param>
+        public void SetResult(GameResult result)
+        {
+            this.result = result;
         }
 
         /// <summary>
