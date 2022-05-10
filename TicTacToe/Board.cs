@@ -112,13 +112,60 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated. Returns true if the space was taken succesfully, false if it was already occupied.
+        /// </summary>
+        /// <param name="board">The board.</param>
+        /// <param name="space">The space to occupy.</param>
+        /// <param name="player">The player whose state should be updated, or null.</param>
+        /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
+        public static bool OccupySpace(Board board, Space space, Player? player)
+        {
+            Shape shapeToPlay = Board.GetShapeOfTurnFromBoard(board);
+            bool spaceOccupiedSuccessfully = false;
+
+            if (!space.IsOccupied())
+            {
+                space.SetOccupant(shapeToPlay);
+
+                // If given a player as an argument, add the given space to the spaces that belong to this player.
+                if (player is not null)
+                {
+                    player.AddToOccupiedSpaces(space);
+                }
+
+                List<Space> emptySpaces = board.GetEmptySpaces();
+                emptySpaces.Remove(space);
+                board.SetEmptySpaces(emptySpaces);
+
+                spaceOccupiedSuccessfully = true;
+            }
+            else
+            {
+                Console.WriteLine("The space is already taken. Choose another one.");
+            }
+
+            return spaceOccupiedSuccessfully;
+        }
+
+        /// <summary>
+        /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated. Returns true if the space was taken succesfully, false if it was already occupied.
+        /// </summary>
+        /// <param name="board">The board.</param>
+        /// <param name="space">The space to occupy.</param>
+        /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
+        public static bool OccupySpace(Board board, Space space)
+        {
+            return OccupySpace(board, space, null);
+        }
+
+        /// <summary>
         /// Checks if there is a winner. Returns a tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.
         /// </summary>
         /// <returns>A tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.</returns>
-        public (bool hasWinner, Player? winner) CheckWin()
+        public (bool hasWinner, Shape? winner) CheckWin()
         {
             bool hasWinner = false;
-            Player? winner = null;
+            Shape? winner = null;
 
             // Idea: We only need to check the surroundings of the last placed shape.
 
@@ -240,7 +287,7 @@ namespace TicTacToe
                 }
                 else
                 {
-                    shapes[i] = spaces[i].GetOccupant().GetShape().ToString();
+                    shapes[i] = spaces[i].GetOccupant().ToString();
                 }
             }
 
@@ -276,22 +323,22 @@ namespace TicTacToe
         {
             GameResult result;
 
-            (bool hasWinner, Player? winnerPlayer) = board.CheckWin();
+            (bool hasWinner, Shape? winnerShape) = board.CheckWin();
             bool hasTie = board.CheckTie();
 
             if (hasWinner)
             {
-                if (winnerPlayer.GetShape() == Shape.X)
+                if (winnerShape == Shape.X)
                 {
                     result = GameResult.WinnerX;
                 } 
-                else if (winnerPlayer.GetShape() == Shape.O)
+                else if (winnerShape == Shape.O)
                 {
                     result = GameResult.WinnerO;
                 }
                 else
                 {
-                    throw new Exception($"No shape matched the winner player's shape ({winnerPlayer.GetShape()}).");
+                    throw new Exception($"No shape matched the winner player's shape ({winnerShape}).");
                 }
             } 
             else if (hasTie)
@@ -338,11 +385,11 @@ namespace TicTacToe
             {
                 if (space.GetOccupant() is not null)
                 {
-                    if (space.GetOccupant().GetShape() == Shape.X)
+                    if (space.GetOccupant() == Shape.X)
                     {
                         countOfX++;
                     }
-                    else if (space.GetOccupant().GetShape() == Shape.O)
+                    else if (space.GetOccupant() == Shape.O)
                     {
                         countOfO++;
                     }
@@ -368,7 +415,7 @@ namespace TicTacToe
                     Space space = spaces[count];
 
                     // Get a string representation of the shape in the given space, or "." if null.
-                    string shape = space.GetOccupant() is null ? "." : space.GetOccupant().GetShape().ToString();
+                    string shape = space.GetOccupant() is null ? "." : space.GetOccupant().ToString();
 
                     template += $"{shape}";
                     count++;

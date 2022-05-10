@@ -11,6 +11,12 @@ namespace TicTacToe
     /// </summary>
     internal class Test
     {
+        public static void RunTests()
+        {
+            TestGetShapeOfTurnFromBoard();
+            //TestGetBestMove();
+            //TestBoardDirection();
+        }
         public static void Test1(Game game)
         {
             Console.WriteLine(game);
@@ -42,8 +48,11 @@ namespace TicTacToe
 
         public static void TestOccupySpace(Game game)
         {
-            game.OccupySpace(game.GetUserPlayer(), game.GetBoard().GetSpace(new Position(1, 0)));
-            game.OccupySpace(game.GetBotPlayer(), game.GetBoard().GetSpace(new Position(2, 0)));
+            Board board = game.GetBoard();
+            Player player = game.GetUserPlayer();
+
+            Board.OccupySpace(board, board.GetSpace(new Position(1, 0)), player);
+            Board.OccupySpace(board, board.GetSpace(new Position(2, 0)), player);
         }
 
         public static void TestEmptySpaces(Board board)
@@ -58,17 +67,61 @@ namespace TicTacToe
         public static void TestGetShapeOfTurnFromBoard()
         {
             Game game = new Game();
+            Board board = game.GetBoard();
 
             // Simulate some moves
-            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(1));
-            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(2));
-            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(8));
-            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(6));
-            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(5));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(5));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(8));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(2));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(1));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(4));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(7));
 
             game.GetBoard().PrintBoard();
 
             Console.WriteLine($"{Board.GetShapeOfTurnFromBoard(game.GetBoard())} has the turn.");
+        }
+
+        public static void TestGetBestMove()
+        {
+            Game game = new Game();
+            Board board = game.GetBoard();
+
+            // Simulate some moves
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(5));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(8));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(2));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(1));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(4));
+            Board.OccupySpace(board, board.GetBoardSpaceFromInt(7));
+
+            board.PrintBoard();
+
+            Console.WriteLine($"{Board.GetShapeOfTurnFromBoard(board)} has the turn.");
+
+            BotAI.GetBestMove(game.GetBoard());
+
+        }
+
+        public static void TestBoardDirection()
+        {
+            Game game = new Game();
+            Board board = game.GetBoard();
+
+            Board.OccupySpace(board, board.GetSpace(new Position(0, 2))); // X
+            Board.OccupySpace(board, board.GetSpace(new Position(2, 0))); // O
+            Board.OccupySpace(board, board.GetSpace(new Position(1, 1))); // X
+
+            /*
+            Expected:
+
+            X..
+            .X.
+            ..O
+
+            */
+
+            board.PrintBoard();
         }
     }
 }

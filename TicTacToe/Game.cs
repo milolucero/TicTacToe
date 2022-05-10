@@ -155,35 +155,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Sets a player's shape into a specific space. Returns true if the space was taken succesfully, false if it was already occupied.
-        /// </summary>
-        /// <param name="player">The player that should occupy the space.</param>
-        /// <param name="space">The space being occupied.</param>
-        /// <returns>True if the space was taken succesfully, false if it was already occupied</returns>
-        public bool OccupySpace(Player player, Space space)
-        {
-            bool spaceOccupiedSuccessfully = false;
-
-            if (!space.IsOccupied())
-            {
-                space.SetOccupant(player);
-                player.AddToOccupiedSpaces(space);
-
-                List<Space> emptySpaces = board.GetEmptySpaces();
-                emptySpaces.Remove(space);
-                board.SetEmptySpaces(emptySpaces);
-
-                spaceOccupiedSuccessfully = true;
-            }
-            else
-            {
-                Console.WriteLine("The space is already taken. Choose another one.");
-            }
-
-            return spaceOccupiedSuccessfully;
-        }
-
-        /// <summary>
         /// Starts a new game.
         /// </summary>
         public void NewGame()
@@ -231,7 +202,8 @@ namespace TicTacToe
                 throw new Exception("Error: Invalid currentTurnPlayer. currentTurnPlayer is neither userPlayer nor botPlayer.");
             }
 
-            OccupySpace(currentTurnPlayer, choiceOfSpaceToOccupy);
+            // Occupy the space chosen and assign that space to the player who has the turn.
+            Board.OccupySpace(board, choiceOfSpaceToOccupy, currentTurnPlayer);
 
             // Print current state of the board
             board.PrintBoard();

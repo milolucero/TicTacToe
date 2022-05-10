@@ -14,7 +14,7 @@ namespace TicTacToe
             Game game = new Game();
             game.NewGame();
 
-            // Test.RunTests();
+            //Test.RunTests();
         }
 
         public static void PrintWelcomeMessage()

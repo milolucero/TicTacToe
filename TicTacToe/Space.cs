@@ -12,14 +12,14 @@ namespace TicTacToe
     internal class Space
     {
         private readonly Position position;
-        private Player? occupant;
+        private Shape? occupant;
 
         /// <summary>
         /// Initializes a new instance of the Space class, with specified position and occupant.
         /// </summary>
         /// <param name="position">The position where the space is located.</param>
         /// <param name="occupant">The player that occupies the space.</param>
-        public Space(Position position, Player? occupant)
+        public Space(Position position, Shape? occupant)
         {
             this.position = position;
             this.occupant = occupant;
@@ -47,7 +47,7 @@ namespace TicTacToe
         /// Returns the player who occupies the space, or null if it is unoccupied.
         /// </summary>
         /// <returns>The player who occupies the space, or null if it is unoccupied.</returns>
-        public Player? GetOccupant()
+        public Shape? GetOccupant()
         {
             return occupant;
         }
@@ -56,7 +56,7 @@ namespace TicTacToe
         /// Sets a specified player to occupy the space, or sets the space empty if null.
         /// </summary>
         /// <param name="occupant">The specified player to occupy the space (or null to set it empty).</param>
-        public void SetOccupant(Player? occupant)
+        public void SetOccupant(Shape? occupant)
         {
             this.occupant = occupant;
         }
