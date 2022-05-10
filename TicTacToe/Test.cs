@@ -28,7 +28,7 @@ namespace TicTacToe
             Console.WriteLine($"game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer()}");
 
             Console.WriteLine("Switching turns...\n");
-            game.SwitchTurns();
+            game.DetermineTurn();
 
             // Console.WriteLine($"\n\ngame.currentTurnPlayer(): {game.currentTurnPlayer}");
             Console.WriteLine($"game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer()}");
@@ -53,6 +53,22 @@ namespace TicTacToe
             {
                 Console.WriteLine(emptySpaces[i].ToString());
             }
+        }
+
+        public static void TestGetShapeOfTurnFromBoard()
+        {
+            Game game = new Game();
+
+            // Simulate some moves
+            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(1));
+            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(2));
+            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(8));
+            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(6));
+            game.OccupySpace(game.GetPlayerFromShape(Board.GetShapeOfTurnFromBoard(game.GetBoard())), game.GetBoard().GetBoardSpaceFromInt(5));
+
+            game.GetBoard().PrintBoard();
+
+            Console.WriteLine($"{Board.GetShapeOfTurnFromBoard(game.GetBoard())} has the turn.");
         }
     }
 }
