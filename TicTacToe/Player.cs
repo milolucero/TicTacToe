@@ -15,7 +15,6 @@ namespace TicTacToe
         private string name;
         private Shape shape;
         private List<Space> occupiedSpaces;
-        // private bool hasTurn;
 
         /// <summary>
         /// Initializes a new instance of the Player, with specified id, name, score and spaces that are filled with the player's shape.
@@ -32,20 +31,18 @@ namespace TicTacToe
             // The player[0] has the first turn and is assigned the shape "X". The player[1] is assigned the shape "O".
             // When the user picks sides ("X" or "O") at the beginning of the game, he is picking to be player[0] or player[1].
 
-            // Set player[0] (X) and player[1] (O) their shape and turn.
+            // Set player[0] (X) and player[1] (O) shapes.
             if (this.id == 0)
             {
                 shape = Shape.X;
-                // SetHasTurn(true);
             } 
             else if (this.id == 1)
             {
                 shape = Shape.O;
-                // SetHasTurn(false);
             }
             else
             {
-                throw new Exception("Error: The game can only have 2 players.");
+                throw new Exception("Unable to instantiate. The game can only have 2 players.");
             }
         }
 
@@ -124,24 +121,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns true if the player currently has the turn to play, false otherwise.
-        /// </summary>
-        /// <returns>True if the player currently has the turn to play, false otherwise.</returns>
-        //public bool GetHasTurn()
-        //{
-        //    return hasTurn;
-        //}
-
-        /// <summary>
-        /// Sets the hasTurn attribute to the specified boolean value.
-        /// </summary>
-        /// <param name="hasTurn">The new value to set the hasTurn attribute.</param>
-        //public void SetHasTurn(bool hasTurn)
-        //{
-        //    this.hasTurn = hasTurn;
-        //}
-
-        /// <summary>
         /// Returns a list of the spaces currently occupied by the player.
         /// </summary>
         /// <returns>A list of the spaces currently occupied by the player.</returns>
@@ -174,7 +153,6 @@ namespace TicTacToe
             template += $"id: {id}\n";
             template += $"name: {name}\n";
             template += $"shape: {shape}\n";
-            // template += $"hasTurn: {HasTurn(board)}\n\n";
             return template;
         }
     }

@@ -22,7 +22,6 @@ namespace TicTacToe
         private int nextAssignableId;
         private int turnCount;
         private List<GameResult> resultHistory;
-        // private bool gameIsOver;
 
         /// <summary>
         /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user. X always has the first turn.
@@ -91,7 +90,6 @@ namespace TicTacToe
             }
 
             throw new Exception("No player without current turn was found.");
-            // return players[0].HasTurn(board) ? players[1] : players[0];
         }
 
         /// <summary>
@@ -100,11 +98,6 @@ namespace TicTacToe
         /// <param name="player">The player who is being set to have the current turn to play.</param>
         public void SetCurrentTurnPlayer(Player player)
         {
-            //for (int i = 0; i < players.Length; i++)
-            //{
-            //    players[i].SetHasTurn(players[i].GetId() == player.GetId());
-            //}
-
             currentTurnPlayer = player;
         }
 
@@ -226,7 +219,9 @@ namespace TicTacToe
             } 
             else if (currentTurnPlayer == botPlayer)
             {
-                // This block should set the choiceOfSpaceToOccupy to the Space that the bot decides to take according to its decision model.
+                // This block is where the bot AI will decide to make a move.
+                // Here we should set the choiceOfSpaceToOccupy to the Space that the bot decides to take according to its decision model.
+                // For testing purposes, the current model is a simple random empty space picker.
 
                 // Get a random empty space
                 choiceOfSpaceToOccupy = BotAI.GetRandomEmptySpace(board);
