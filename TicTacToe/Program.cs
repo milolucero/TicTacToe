@@ -9,6 +9,8 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
+            //Test.TestGetShapeOfTurnFromBoard();
+
             Console.WriteLine("Tic-tac-toe V1.0");
             Console.WriteLine("Author: Camilo Lucero");
             Console.WriteLine("Email: cluceroespitia@rrc.ca\n");

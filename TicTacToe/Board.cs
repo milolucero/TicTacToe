@@ -325,6 +325,34 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Returns the shape that should play next based on a given board. Assumes that X always starts.
+        /// </summary>
+        /// <param name="board">The board to check.</param>
+        /// <returns>The shape that should play next</returns>
+        public static Shape GetShapeOfTurnFromBoard(Board board)
+        {
+            int countOfX = 0;
+            int countOfO = 0;
+
+            foreach (Space space in board.GetSpaces())
+            {
+                if (space.GetOccupant() is not null)
+                {
+                    if (space.GetOccupant().GetShape() == Shape.X)
+                    {
+                        countOfX++;
+                    }
+                    else if (space.GetOccupant().GetShape() == Shape.O)
+                    {
+                        countOfO++;
+                    }
+                }
+            }
+
+            return countOfX == countOfO ? Shape.X : Shape.O;
+        }
+
+        /// <summary>
         /// Returns a string representation of the board and its current state.
         /// </summary>
         /// <returns>A string representation of the board and its current state.</returns>

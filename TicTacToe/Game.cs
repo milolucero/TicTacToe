@@ -25,7 +25,7 @@ namespace TicTacToe
         // private bool gameIsOver;
 
         /// <summary>
-        /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user.
+        /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user. X always has the first turn.
         /// </summary>
         public Game()
         {
@@ -39,7 +39,7 @@ namespace TicTacToe
             }
 
             // player[0] (X) always has the first turn.
-            SetCurrentTurnPlayer(players[0]);
+            DetermineTurn();
 
             //Initialize win history
             resultHistory = new List<GameResult>();
@@ -82,7 +82,16 @@ namespace TicTacToe
         /// <returns>The instance of the player who does not have the current turn to play.</returns>
         public Player GetNotCurrentTurnPlayer()
         {
-            return players[0].GetHasTurn() ? players[1] : players[0];
+            foreach (Player player in players)
+            {
+                if (player != currentTurnPlayer)
+                {
+                    return player;
+                }
+            }
+
+            throw new Exception("No player without current turn was found.");
+            // return players[0].HasTurn(board) ? players[1] : players[0];
         }
 
         /// <summary>
@@ -91,20 +100,21 @@ namespace TicTacToe
         /// <param name="player">The player who is being set to have the current turn to play.</param>
         public void SetCurrentTurnPlayer(Player player)
         {
-            for (int i = 0; i < players.Length; i++)
-            {
-                players[i].SetHasTurn(players[i].GetId() == player.GetId());
-            }
+            //for (int i = 0; i < players.Length; i++)
+            //{
+            //    players[i].SetHasTurn(players[i].GetId() == player.GetId());
+            //}
 
             currentTurnPlayer = player;
         }
 
         /// <summary>
-        /// Switches turns between the players.
+        /// Determines and assigns the player who has the turn according to the state of the filled spaces on the board.
         /// </summary>
-        public void SwitchTurns()
+        public void DetermineTurn()
         {
-            SetCurrentTurnPlayer(GetNotCurrentTurnPlayer());
+            Shape shapeOfCurrentTurn = Board.GetShapeOfTurnFromBoard(board);
+            SetCurrentTurnPlayer(GetPlayerFromShape(shapeOfCurrentTurn));
         }
 
         /// <summary>
@@ -231,6 +241,7 @@ namespace TicTacToe
             // Print current state of the board
             board.PrintBoard();
 
+            // If there is a winner or draw
             GameResult gameResult = Board.GetResultFromBoard(board);
             bool gameIsOver = (gameResult != GameResult.Incomplete);
             if (gameIsOver)
@@ -252,7 +263,7 @@ namespace TicTacToe
             }
             else
             {
-                SwitchTurns();
+                DetermineTurn();
             }
         }
 
@@ -316,6 +327,8 @@ namespace TicTacToe
         public void RestartGame()
         {
             board = new Board();
+
+            DetermineTurn();
 
             turnCount = 0;
 

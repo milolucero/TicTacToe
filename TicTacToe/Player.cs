@@ -15,7 +15,7 @@ namespace TicTacToe
         private string name;
         private Shape shape;
         private List<Space> occupiedSpaces;
-        private bool hasTurn;
+        // private bool hasTurn;
 
         /// <summary>
         /// Initializes a new instance of the Player, with specified id, name, score and spaces that are filled with the player's shape.
@@ -36,12 +36,12 @@ namespace TicTacToe
             if (this.id == 0)
             {
                 shape = Shape.X;
-                SetHasTurn(true);
+                // SetHasTurn(true);
             } 
             else if (this.id == 1)
             {
                 shape = Shape.O;
-                SetHasTurn(false);
+                // SetHasTurn(false);
             }
             else
             {
@@ -114,22 +114,32 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Returns true if the player currently has the turn to play based on a given board, false otherwise.
+        /// </summary>
+        /// <param name="board">The board to check the current turn.</param>
+        /// <returns>True if the player currently has the turn to play, false otherwise.</returns>
+        public bool HasTurn(Board board)
+        {
+            return GetShape() == Board.GetShapeOfTurnFromBoard(board);
+        }
+
+        /// <summary>
         /// Returns true if the player currently has the turn to play, false otherwise.
         /// </summary>
         /// <returns>True if the player currently has the turn to play, false otherwise.</returns>
-        public bool GetHasTurn()
-        {
-            return hasTurn;
-        }
+        //public bool GetHasTurn()
+        //{
+        //    return hasTurn;
+        //}
 
         /// <summary>
         /// Sets the hasTurn attribute to the specified boolean value.
         /// </summary>
         /// <param name="hasTurn">The new value to set the hasTurn attribute.</param>
-        public void SetHasTurn(bool hasTurn)
-        {
-            this.hasTurn = hasTurn;
-        }
+        //public void SetHasTurn(bool hasTurn)
+        //{
+        //    this.hasTurn = hasTurn;
+        //}
 
         /// <summary>
         /// Returns a list of the spaces currently occupied by the player.
@@ -164,7 +174,7 @@ namespace TicTacToe
             template += $"id: {id}\n";
             template += $"name: {name}\n";
             template += $"shape: {shape}\n";
-            template += $"hasTurn: {hasTurn}\n\n";
+            // template += $"hasTurn: {HasTurn(board)}\n\n";
             return template;
         }
     }
