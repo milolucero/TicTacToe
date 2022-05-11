@@ -30,22 +30,73 @@ namespace TicTacToe
         /// Returns the best possible empty space to occupy based on the board's current state and the shape's turn.
         /// </summary>
         /// <param name="board">The board from which to choose a space.</param>
-        /// <returns>The best possible empty space to occupy.</returns>
-        public static Space GetBestMove(Board board)
+        /// <returns>The best possible empty space to occupy for the shape with the current turn.</returns>
+        public static Space? GetBestMove(Board board)
         {
-            Shape shapeToPlay = Board.GetShapeOfTurnFromBoard(board);
-
             Space[] spaces = board.GetSpaces();
+            Space? bestMove = null; // Make not nullable here and in the method declaration
+
+            Shape shapeToPlay = Board.GetShapeOfTurnFromBoard(board);
+            Shape opponentShape = (shapeToPlay == Shape.X) ? Shape.O : Shape.X;
+
+            List<GameResult> resultHistory = new List<GameResult>();
 
             foreach (Space emptySpace in board.GetEmptySpaces())
             {
-                Console.WriteLine(emptySpace.ToString());
+                (bool reachedTerminalState, int? scoreForX, int? scoreForO) = GetMoveScore(board, emptySpace);
 
-                Board nextTurnBoard = new Board(spaces);
-
+                if (reachedTerminalState && scoreForX > 0)
+                {
+                    bestMove = emptySpace;
+                    Console.WriteLine("Winning move!");
+                    Console.WriteLine(emptySpace);
+                }
             }
 
-            return spaces[0];
+            // In resultHistory each time that an empty space is looped over, add the MoveScore from picking that space. If no winning move is found, 
+            return bestMove;
+        }
+
+        public static (bool reachedTerminalState, int? scoreForX, int? scoreForO) GetMoveScore(Board board, Space move)
+        {
+            int? scoreForX = null;
+            int? scoreForO = null;
+
+            Shape shapeToPlay = Board.GetShapeOfTurnFromBoard(board);
+
+            // Simulate the move.
+            Board.OccupySpace(board, move);
+
+            // Check if the move resulted in a win or tie.
+            (bool hasWinner, Shape? winnerShape) = board.CheckWin();
+            bool hasTie = board.CheckTie();
+
+            if (hasWinner)
+            {
+                if (winnerShape == Shape.X)
+                {
+                    scoreForX = 1;
+                    scoreForO = -1;
+                }
+                else if (winnerShape == Shape.O)
+                {
+                    scoreForX = -1;
+                    scoreForO = 1;
+                }
+            } 
+            else if (hasTie)
+            {
+                scoreForX = 0;
+                scoreForO = 0;
+            }
+            else
+            {
+                //Console.WriteLine($"Move does not result in a win or a tie.");
+            }
+
+            bool reachedTerminalState = hasWinner || hasTie;
+
+            return (reachedTerminalState, scoreForX, scoreForO);
         }
     }
 }

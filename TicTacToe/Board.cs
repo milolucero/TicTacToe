@@ -162,10 +162,10 @@ namespace TicTacToe
         /// Checks if there is a winner. Returns a tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.
         /// </summary>
         /// <returns>A tuple where the first value is true if a winner was found; otherwise, false. The second value is the winning player if there was one found; otherwise, null.</returns>
-        public (bool hasWinner, Shape? winner) CheckWin()
+        public (bool hasWinner, Shape? winnerShape) CheckWin()
         {
             bool hasWinner = false;
-            Shape? winner = null;
+            Shape? winnerShape = null;
 
             // Idea: We only need to check the surroundings of the last placed shape.
 
@@ -197,7 +197,7 @@ namespace TicTacToe
                     (spaces[wayOfWinning3[0]].GetOccupant() == spaces[wayOfWinning3[1]].GetOccupant() && spaces[wayOfWinning3[1]].GetOccupant() == spaces[wayOfWinning3[2]].GetOccupant()))
                 {
                     hasWinner = true;
-                    winner = spaces[0].GetOccupant();
+                    winnerShape = spaces[0].GetOccupant();
                 }
             }
 
@@ -206,7 +206,7 @@ namespace TicTacToe
                 if (spaces[wayOfWinning4[0]].GetOccupant() == spaces[wayOfWinning4[1]].GetOccupant() && spaces[wayOfWinning4[1]].GetOccupant() == spaces[wayOfWinning4[2]].GetOccupant())
                 {
                     hasWinner = true;
-                    winner = spaces[1].GetOccupant();
+                    winnerShape = spaces[1].GetOccupant();
                 }
             }
 
@@ -216,7 +216,7 @@ namespace TicTacToe
                     (spaces[wayOfWinning6[0]].GetOccupant() == spaces[wayOfWinning6[1]].GetOccupant() && spaces[wayOfWinning6[1]].GetOccupant() == spaces[wayOfWinning6[2]].GetOccupant()))
                 {
                     hasWinner = true;
-                    winner = spaces[2].GetOccupant();
+                    winnerShape = spaces[2].GetOccupant();
                 }
             }
 
@@ -225,7 +225,7 @@ namespace TicTacToe
                 if (spaces[wayOfWinning7[0]].GetOccupant() == spaces[wayOfWinning7[1]].GetOccupant() && spaces[wayOfWinning7[1]].GetOccupant() == spaces[wayOfWinning7[2]].GetOccupant())
                 {
                     hasWinner = true;
-                    winner = spaces[3].GetOccupant();
+                    winnerShape = spaces[3].GetOccupant();
                 }
             }
 
@@ -234,11 +234,11 @@ namespace TicTacToe
                 if (spaces[wayOfWinning8[0]].GetOccupant() == spaces[wayOfWinning8[1]].GetOccupant() && spaces[wayOfWinning8[1]].GetOccupant() == spaces[wayOfWinning8[2]].GetOccupant())
                 {
                     hasWinner = true;
-                    winner = spaces[6].GetOccupant();
+                    winnerShape = spaces[6].GetOccupant();
                 }
             }
 
-            return (hasWinner, winner);
+            return (hasWinner, winnerShape);
         }
 
         /// <summary>
