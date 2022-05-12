@@ -40,7 +40,7 @@ namespace TicTacToe
         /// <returns>The optimal move for the player with the current turn on a given board move based on the minimax algorithm.</returns>
         public static Space GetMinimaxMove(Board board)
         {
-            (_, Space moveChoice) = Minimax(board, false);
+            (_, Space moveChoice) = Minimax(board, true);
             return moveChoice;
         }
 
@@ -76,6 +76,12 @@ namespace TicTacToe
 
                 (int score, _) = Minimax(nextBoard, !isMaximizing);
 
+                // If this is a winning move for the maximizing player, return it immediately to stop analyzing other options and increase the algorithm's efficiency.
+                if (isMaximizing && score == 1)
+                {
+                    return (score, move);
+                }
+
                 scores.Add(score);
                 moves.Add(move);
             }
@@ -99,9 +105,9 @@ namespace TicTacToe
         /// <summary>
         /// Returns the score of a board in terminal state (there is a winner or a draw) based on the result of the game. 
         /// </summary>
-        /// <param name="board"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="board">A board in terminal state.</param>
+        /// <returns>The score of the board. Returns 1 if there was a winner, 0 if there was a draw.</returns>
+        /// <exception cref="Exception">If the board was not in terminal state.</exception>
         public static int GetScore(Board board)
         {
             int score;
