@@ -24,12 +24,12 @@ namespace TicTacToe
         private List<GameResult> resultHistory;
 
         /// <summary>
-        /// Initializes a new instance of the Game class, especifying the side/shape (either "X" or "O") chosen by the user. X always has the first turn.
+        /// Initializes a new instance of the Game class, with a specific board.
+        /// The constructor Game(Board) sets fields like turnCount or player state to initial values. It just allows to simulate a game from a non-empty board for testing purposes.
         /// </summary>
-        public Game()
+        /// 
+        public Game(Board board)
         {
-            board = new Board();
-
             // Create players
             players = new Player[Rule.GetMaxNumberOfPlayers()];
             for (int i = 0; i < players.Length; i++)
@@ -37,11 +37,23 @@ namespace TicTacToe
                 players[i] = new Player(GetNewId());
             }
 
+            // Set the board
+            SetBoard(board);
+
+            // Since X always starts, what shape has the turn depends on the board, so it should be determined each time a new board is set.
             // player[0] (X) always has the first turn.
             DetermineTurn();
 
             //Initialize win history
             resultHistory = new List<GameResult>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Game class. X always has the first turn.
+        /// </summary>
+        public Game() : this(new Board())
+        { 
+
         }
 
         /// <summary>
@@ -51,6 +63,15 @@ namespace TicTacToe
         public Board GetBoard()
         {
             return board;
+        }
+
+        /// <summary>
+        /// Sets the game board.
+        /// </summary>
+        /// <param name="board"></param>
+        public void SetBoard(Board board)
+        {
+            this.board = board;
         }
 
         /// <summary>
@@ -159,17 +180,17 @@ namespace TicTacToe
         /// </summary>
         public void NewGame()
         {
-            // player[0] (X) always has the first turn.
-            SetCurrentTurnPlayer(players[0]);
-
             // Prompt user shape choice
             Shape userShapeChoice = GetUserShapeChoice();
 
             // Set user player shape choice (either X or O, player with shape X always has the first turn).
             SetUserPlayer(userShapeChoice);
 
-            bool gameIsNotOver = (board.GetResult() == GameResult.Incomplete);
-            while (gameIsNotOver)
+            // Print initial board
+            GetBoard().PrintBoard();
+
+            // While the game is not over
+            while (board.GetResult() == GameResult.Incomplete)
             {
                 NewTurn();
             }
@@ -182,24 +203,29 @@ namespace TicTacToe
         {
             Space choiceOfSpaceToOccupy;
 
+            // Display current turn info
+            Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
+
+            // Choose a space to make the move.
+
             if (currentTurnPlayer == userPlayer)
             {
-                Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
-
                 choiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
-            } 
+            }
             else if (currentTurnPlayer == botPlayer)
             {
                 // This block is where the bot AI will decide to make a move.
-                // Here we should set the choiceOfSpaceToOccupy to the Space that the bot decides to take according to its decision model.
-                // For testing purposes, the current model is a simple random empty space picker.
+                // Set choiceOfSpaceToOccupy to the Space that the bot decides to take according to the AI decision model.
 
-                // Get a random empty space
-                choiceOfSpaceToOccupy = BotAI.GetRandomEmptySpace(board);
+                // Algorithm: Random pick
+                //choiceOfSpaceToOccupy = BotAI.GetRandomMove(board);
+                
+                // Algorithm: Minimax
+                choiceOfSpaceToOccupy = BotAI.GetMinimaxMove(board);
             }
             else
             {
-                throw new Exception("Error: Invalid currentTurnPlayer. currentTurnPlayer is neither userPlayer nor botPlayer.");
+                throw new Exception("Invalid currentTurnPlayer. currentTurnPlayer is neither userPlayer nor botPlayer.");
             }
 
             // Occupy the space chosen and assign that space to the player who has the turn.

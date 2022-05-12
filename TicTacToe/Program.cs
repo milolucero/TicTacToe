@@ -14,7 +14,7 @@ namespace TicTacToe
             Game game = new Game();
             game.NewGame();
 
-            //Test.RunTests();
+            // Test.RunTests();
         }
 
         public static void PrintWelcomeMessage()
@@ -25,7 +25,7 @@ namespace TicTacToe
             string authorEmail = "cluceroespitia@rrc.ca";
 
             string message = "";
-            message += $"{programName} V{programVersion}\n";
+            message += $"{programName} v{programVersion}\n";
             message += $"Author: {authorName}\n";
             message += $"Email: {authorEmail}\n";
 
