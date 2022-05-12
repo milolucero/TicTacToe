@@ -72,8 +72,20 @@ namespace TicTacToe
 
         public override string ToString()
         {
-            string template = $"Space located at position ({GetPosition().GetX()}, {GetPosition().GetY()}). Occupied by {GetOccupant()}.";
+            string template = "";
+            template += $"Space ({GetPosition().GetX()}, {GetPosition().GetY()}) - ";
+            template += $"{(IsOccupied() ? GetOccupant() : "Empty")}";
             return template;
+        }
+
+
+        public static Space GetSpaceClone(Space space)
+        {
+            Position cloneSpacePosition = new Position(space.GetPosition().GetX(), space.GetPosition().GetY());
+
+            Space cloneSpace = new Space(cloneSpacePosition, space.GetOccupant());
+
+            return cloneSpace;
         }
     }
 }

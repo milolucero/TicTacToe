@@ -28,7 +28,7 @@ namespace TicTacToe
             width = Rule.GetBoardDimensions().width;
             this.spaces = spaces;
             SetEmptySpaces(GetEmptySpaces());
-            SetResult(GameResult.Incomplete);
+            SetResult(GetResultFromBoard(this));
         }
 
         /// <summary>
@@ -120,12 +120,15 @@ namespace TicTacToe
         /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
         public static bool OccupySpace(Board board, Space space, Player? player)
         {
-            Shape shapeToPlay = Board.GetShapeOfTurnFromBoard(board);
+            Shape shapeToPlay = GetShapeOfTurnFromBoard(board);
             bool spaceOccupiedSuccessfully = false;
 
             if (!space.IsOccupied())
             {
-                space.SetOccupant(shapeToPlay);
+                // Make a clone of the space, set the occupant, and assign it to the same space position in the given board. This will avoid mutating the given space, allowing for simulating moves without affecting the original argument's state.
+                Space spaceClone = Space.GetSpaceClone(space);
+                spaceClone.SetOccupant(shapeToPlay);
+                board.SetSpace(spaceClone);
 
                 // If given a player as an argument, add the given space to the spaces that belong to this player.
                 if (player is not null)
@@ -141,6 +144,7 @@ namespace TicTacToe
             }
             else
             {
+                Console.WriteLine($"Space {space} - Appears to be occupied.");
                 Console.WriteLine("The space is already taken. Choose another one.");
             }
 
@@ -154,7 +158,7 @@ namespace TicTacToe
         /// <param name="space">The space to occupy.</param>
         /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
         public static bool OccupySpace(Board board, Space space)
-        {
+        {            
             return OccupySpace(board, space, null);
         }
 
@@ -270,6 +274,44 @@ namespace TicTacToe
             throw new Exception($"No space matched the position ({position.GetX()}, {position.GetY()}).");
         }
 
+
+        public void SetSpace(Space space)
+        {
+            // To get a 0-8 position from a (x, y) coordinate, we add x to y times 3.
+            // BUG: Positions are inverted, a space(2, 0) should be in position x = 2, y = 0, but is instead in x = 0, y = 2. Inverting the variables here is a hotfix, but needs to be fixed before it cascades into other bugs.
+            int y = space.GetPosition().GetY();
+            int x = space.GetPosition().GetX();
+            int arrayPosition = y + (x * 3); // The correct formula should be x + (y * 3)
+            GetSpaces()[arrayPosition] = space;
+        }
+
+        /// <summary>
+        /// Returns a clone of a given board, with equal field values, but different references. This allows to perform simulations on board clones, without affecting the game's state.
+        /// </summary>
+        /// <param name="board">The board to clone.</param>
+        /// <returns>A clone of the board.</returns>
+        public static Board GetBoardClone(Board board)
+        {
+            Board clone = new Board();
+
+            // Clone spaces of board
+            for (int i = 0; i < board.GetSpaces().Length; i++)
+            {
+                clone.GetSpaces()[i] = Space.GetSpaceClone(board.GetSpaces()[i]);
+            }
+
+            // Clone array of empty spaces
+            for (int i = 0; i < board.GetEmptySpaces().Count; i++)
+            {
+                clone.GetEmptySpaces()[i] = Space.GetSpaceClone(board.GetEmptySpaces()[i]);
+            }
+
+            // Set result
+            clone.SetResult(GetResultFromBoard(clone));
+
+            return clone;
+        }
+
         /// <summary>
         /// Prints the board.
         /// </summary>
@@ -315,6 +357,26 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Takes an (x, y) coordinate and returns the space of the board located in that position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Space GetBoardSpaceFromCoordinates(int x, int y)
+        {
+            // To get a 0-8 position from a (x, y) coordinate, we add x to y times 3.
+            int positionOnArray = x + (y * 3);
+
+            // Check if space is in range
+            if (positionOnArray < spaces.Length)
+            {
+                return spaces[(x + 1) + (y * 3)];
+            }
+
+            throw new Exception($"Space out of bounds. Trying to get space ({x}, {y}), equivalent to position [{positionOnArray}] of an array of {spaces.Length} elements.");            
+        }
+
+        /// <summary>
         /// Returns the result of a given board.
         /// </summary>
         /// <param name="board">The board to examine for result.</param>
@@ -331,7 +393,7 @@ namespace TicTacToe
                 if (winnerShape == Shape.X)
                 {
                     result = GameResult.WinnerX;
-                } 
+                }
                 else if (winnerShape == Shape.O)
                 {
                     result = GameResult.WinnerO;
@@ -340,7 +402,7 @@ namespace TicTacToe
                 {
                     throw new Exception($"No shape matched the winner player's shape ({winnerShape}).");
                 }
-            } 
+            }
             else if (hasTie)
             {
                 result = GameResult.Tie;

@@ -7,17 +7,28 @@ using System.Threading.Tasks;
 namespace TicTacToe
 {
     /// <summary>
-    /// A class for testing purposes.
+    /// A playground class for testing purposes. 
     /// </summary>
     internal class Test
     {
         public static void RunTests()
         {
+            //SimulateGameFromBoard(GetTestBoard(2));
+
             //TestTurnSwitching();
             //TestGetShapeOfTurnFromBoard();
-            TestGetBestMove();
+            //TestGetBestMove();
             //TestBoardDirection();
+            TestMinimax(8);
+            //TestBoardClone();
         }
+
+        public static void SimulateGameFromBoard(Board board)
+        {
+            Game game = new Game(board);
+            game.NewGame();
+        }
+
         public static void Test1(Game game)
         {
             Console.WriteLine(game);
@@ -100,7 +111,22 @@ namespace TicTacToe
             // In board 3 it's X's turn. The best move for X for Board 3 current state is board.GetBoardSpaceFromInt(3), since it's the only winning move.
             // Choosing board.GetBoardSpaceFromInt(2) leads to losing on the next turn (both remaining options are wins for O).
             // Choosing board.GetBoardSpaceFromInt(1) could either lead to X winning or tie, depending on O move.
-            BotAI.GetBestMove(board);
+            // Space bestMove = BotAI.GetBestMove(board);
+
+            // Board.OccupySpace(board, bestMove);
+
+            board.PrintBoard();
+        }
+
+        public static void TestMinimax(int boardNumber)
+        {
+            SimulateGameFromBoard(GetTestBoard(boardNumber));
+        }
+
+        public static void TestBoardClone()
+        {
+            Game game = new Game(GetTestBoard(3));
+            game.NewGame();
         }
 
         public static void TestBoardDirection()
@@ -161,6 +187,86 @@ namespace TicTacToe
                 Board.OccupySpace(board, board.GetBoardSpaceFromInt(5));
                 Board.OccupySpace(board, board.GetBoardSpaceFromInt(6));
                 Board.OccupySpace(board, board.GetBoardSpaceFromInt(4));
+            }
+
+            /*
+             * Board 4 - O Plays. Two options: One move leads to draw, the other leads to O losing.
+             * OXX
+             * XXO
+             * O..
+             */
+            if (boardNumber == 4)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+            }
+
+            /*
+             * Board 5 - X plays. The best move is on space 4, since it guarantees a win in X's next turn, regardless of O's move.
+             * Use this to test the bot's algorithm. Playing as X, the bot should always pick space 4 in its first turn.
+             * XO.
+             * ..X
+             * ..O
+             */
+            if (boardNumber == 5)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(3)); // O
+            }
+
+            /*
+             * Board 6 - O plays. Both alternatives lead to O's losing. Check how the bot behaves when playing as O.
+             * XXO
+             * OXX
+             * O..
+             */
+            if (boardNumber == 6)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+            }
+
+            /*
+             * Board 7 - O plays. X is about to win by choosing 6. O must decide to choose 6 to keep alive.
+             * O.X
+             * XX.
+             * O..
+             */
+            if (boardNumber == 7)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+            }
+
+            /*
+             * Board 8 - X plays. 3 options, one move leads to a win, the others lead to a lose in the next turn. X must choose 7 to win.
+             * .OO
+             * X..
+             * XXO
+             */
+            if (boardNumber == 8)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(2)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(3)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // O
             }
 
             return board;
