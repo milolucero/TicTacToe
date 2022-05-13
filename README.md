@@ -1,4 +1,8 @@
-#### A Tic-Tac-Toe console game written in C# using object oriented programming principles.
+#### An unbeatable Tic-Tac-Toe console game written in C# using object oriented programming principles.
+
+<p align="center">
+<img src="tictactoe-demo.gif" width="350px" align="center">
+</p>
 
 ### Description
 The game allows the user to pick a side (either X or O) and will give control to the remaining side to an adversary bot player. After each game, the user is able to continue playing while a displayed score keeps track of the results of previous games.
