@@ -8,7 +8,7 @@ The code is easy to update and maintain due to its modularization by using class
 The bot plays smart moves, **making it impossible to be beaten**.
 
 ### How is it unbeatable?
-Through an implementation of the (https://en.wikipedia.org/wiki/Minimax)[minimax algorithm], the bot's artificial intelligence looks ahead and always chooses the best possible move. The algorithm works by iterating over each space of the board and simulating the move, then it will assume the opponent (you) will also choose the best possible move. This process is repeated recursively until a terminal state is reached (win/lose/tie), where the initial move will be graded depending on the result that it led to. Finally, the bot will analyze the results to choose the move that will provide it with the best outcome.
+Through an implementation of the [minimax algorithm](https://en.wikipedia.org/wiki/Minimax), the bot's artificial intelligence looks ahead and always chooses the best possible move. The algorithm works by iterating over each space of the board and simulating the move, then it will assume the opponent (you) will also choose the best possible move. This process is repeated recursively until a terminal state is reached (win/lose/tie), where the initial move will be graded depending on the result that it led to. Finally, the bot will analyze the results to choose the move that will provide it with the best outcome.
 
 By performing this analysis for every move the bot makes, the human player can only expect to get to a tie if the game is played optimally from his/her side.
 
