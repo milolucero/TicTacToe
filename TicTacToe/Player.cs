@@ -137,6 +137,10 @@ namespace TicTacToe
             occupiedSpaces = new List<Space>();
         }
 
+        /// <summary>
+        /// Adds the given space to the player's instance occupied spaces.
+        /// </summary>
+        /// <param name="space">The space to add to the player's occupied spaces.</param>
         public void AddToOccupiedSpaces(Space space)
         {
             occupiedSpaces.Add(space);

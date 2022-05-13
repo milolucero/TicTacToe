@@ -9,7 +9,7 @@ namespace TicTacToe
     {        
         static void Main(string[] args)
         {
-            PrintWelcomeMessage();
+            PrintProgramInformation("Tic-Tac-Toe", "1.0.0", "Camilo Lucero", "cluceroespitia@rrc.ca");
 
             Game game = new Game();
             game.NewGame();
@@ -17,13 +17,15 @@ namespace TicTacToe
             // Test.RunTests();
         }
 
-        public static void PrintWelcomeMessage()
+        /// <summary>
+        /// Displays a message with information of the program and author.
+        /// </summary>
+        /// <param name="programName">The name of the program.</param>
+        /// <param name="programVersion">The version of the program.</param>
+        /// <param name="authorName">The name of the author.</param>
+        /// <param name="authorEmail">The email of the author.</param>
+        public static void PrintProgramInformation(string programName, string programVersion, string authorName, string authorEmail)
         {
-            string programName = "Tic-tac-toe";
-            string programVersion = "1.0";
-            string authorName = "Camilo Lucero";
-            string authorEmail = "cluceroespitia@rrc.ca";
-
             string message = "";
             message += $"{programName} v{programVersion}\n";
             message += $"Author: {authorName}\n";

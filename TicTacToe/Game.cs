@@ -66,9 +66,9 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Sets the game board.
+        /// Sets the board to the game.
         /// </summary>
-        /// <param name="board"></param>
+        /// <param name="board">The board to assign to the game.</param>
         public void SetBoard(Board board)
         {
             this.board = board;
@@ -132,9 +132,9 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Gets the instance of the player that is assigned to the user.
+        /// Returns the instance of the player that is assigned to the user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The instance of the player that is assigned to the user.</returns>
         public Player GetUserPlayer()
         {
             return userPlayer;
@@ -167,7 +167,7 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Gets the instance of the player that is assigned to the computer player.
+        /// Returns the instance of the player that is assigned to the computer player.
         /// </summary>
         /// <returns>The instance of the player that is assigned to the computer player.</returns>
         public Player GetBotPlayer()
@@ -444,16 +444,22 @@ namespace TicTacToe
         /// <summary>
         /// Prints a message declaring the winner or a tie.
         /// </summary>
-        /// <param name="gameResult">The result of the game.</param>
+        /// <param name="gameResult">The result of a finished game.</param>
+        /// <exception cref="Exception">Thrown when given a result where the game is still incomplete.</exception>
         public void DisplayWinner(GameResult gameResult)
         {
+            if (gameResult == GameResult.Incomplete)
+            {
+                throw new Exception("Not possible to display the result of an unfinished game.");
+            }
+
             string declareWinnerMessage = "";
 
             declareWinnerMessage += "\n############\n";
 
             if (gameResult == GameResult.WinnerX || gameResult == GameResult.WinnerO)
             {
-                Player winner = GetPlayerFromResult(gameResult);
+                Player winner = GetWinningPlayerFromResult(gameResult);
                 declareWinnerMessage += $"{winner.GetName()} ({winner.GetShape()}) won!";
             }
             else if (gameResult == GameResult.Tie)
@@ -483,9 +489,9 @@ namespace TicTacToe
         /// <summary>
         /// Returns the player that matches the specified shape.
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="shape">The shape that the returned player should have assigned.</param>
         /// <returns>The player that matches the specified shape.</returns>
-        /// <exception cref="Exception">Error if no player with the specified shape is found.</exception>
+        /// <exception cref="Exception">Thrown if no player with the specified shape is found.</exception>
         public Player GetPlayerFromShape(Shape shape)
         {
             foreach (Player player in players)
@@ -499,7 +505,13 @@ namespace TicTacToe
             throw new Exception($"No player was found with the shape {shape}.");
         }
 
-        public Player GetPlayerFromResult(GameResult result)
+        /// <summary>
+        /// Returns the player instance who has the shape that won the given board.
+        /// </summary>
+        /// <param name="result">The game result of a finished game.</param>
+        /// <returns>The player instance who has the shape that won the given board.</returns>
+        /// <exception cref="Exception">Thrown if the provided result was not a winner (for example, if given a tie or incomplete result).</exception>
+        public Player GetWinningPlayerFromResult(GameResult result)
         {
             Player player;
 

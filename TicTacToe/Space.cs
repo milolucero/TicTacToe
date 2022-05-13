@@ -78,7 +78,11 @@ namespace TicTacToe
             return template;
         }
 
-
+        /// <summary>
+        /// Creates a copy of the given space object.
+        /// </summary>
+        /// <param name="space">The space to copy.</param>
+        /// <returns>A copy of the given space.</returns>
         public static Space GetSpaceClone(Space space)
         {
             Position cloneSpacePosition = new Position(space.GetPosition().GetX(), space.GetPosition().GetY());

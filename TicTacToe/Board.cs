@@ -51,7 +51,7 @@ namespace TicTacToe
         /// <summary>
         /// Sets the spaces of the board to the specified array of spaces.
         /// </summary>
-        /// <param name="spaces"></param>
+        /// <param name="spaces">The array of spaces.</param>
         public void SetSpaces(Space[] spaces)
         {
             this.spaces = spaces;
@@ -274,7 +274,10 @@ namespace TicTacToe
             throw new Exception($"No space matched the position ({position.GetX()}, {position.GetY()}).");
         }
 
-
+        /// <summary>
+        /// Replaces the space in the board by the given space object. The space replaced corresponds to the same board position as the space given.
+        /// </summary>
+        /// <param name="space">The space that will be placed on the board.</param>
         public void SetSpace(Space space)
         {
             // To get a 0-8 position from a (x, y) coordinate, we add x to y times 3.
@@ -359,12 +362,13 @@ namespace TicTacToe
         /// <summary>
         /// Takes an (x, y) coordinate and returns the space of the board located in that position.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
+        /// <param name="x">The horizontal coordinate.</param>
+        /// <param name="y">The vertical coordinate.</param>
+        /// <returns>The space located at the specified coordinate.</returns>
+        /// <exception cref="Exception">Thrown if the coordinates are out of range for the board's spaces.</exception>
         public Space GetBoardSpaceFromCoordinates(int x, int y)
         {
-            // To get a 0-8 position from a (x, y) coordinate, we add x to y times 3.
+            // To get a 0-8 position from an (x, y) coordinate, we add x to y times the board's width.
             int positionOnArray = x + (y * 3);
 
             // Check if space is in range
@@ -472,6 +476,8 @@ namespace TicTacToe
             int count = 0;
             for (int i = 0; i < height; i++)
             {
+                template += "[";
+
                 for (int j = 0; j < width; j++)
                 {
                     Space space = spaces[count];
@@ -483,7 +489,7 @@ namespace TicTacToe
                     count++;
                 }
 
-                template += "\n";
+                template += "]\n";
             }
 
             return template;
