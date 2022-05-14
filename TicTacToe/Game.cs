@@ -170,8 +170,8 @@ namespace TicTacToe
             }
 
             // Set player names
-            userPlayer.SetName("You");
-            botPlayer.SetName("Bot");
+            userPlayer.Name = "You";
+            botPlayer.Name = "Bot";
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace TicTacToe
             Space choiceOfSpaceToOccupy;
 
             // Display current turn info
-            Console.WriteLine($"Turn: {currentTurnPlayer.GetName()} ({currentTurnPlayer.GetShape()})");
+            Console.WriteLine($"Turn: {currentTurnPlayer.Name} ({currentTurnPlayer.Shape})");
 
             // Choose a space to make the move.
 
@@ -224,12 +224,8 @@ namespace TicTacToe
             {
                 // This block is where the bot AI will decide to make a move.
                 // Set choiceOfSpaceToOccupy to the Space that the bot decides to take according to the AI decision model.
-
-                // Algorithm: Random pick
-                //choiceOfSpaceToOccupy = BotAI.GetRandomMove(board);
-                
-                // Algorithm: Minimax
-                choiceOfSpaceToOccupy = BotAI.GetMinimaxMove(GameBoard);
+                DifficultyLevel difficultyLevel = DifficultyLevel.Hard;
+                choiceOfSpaceToOccupy = BotAI.GetMove(difficultyLevel, GameBoard);
             }
             else
             {
@@ -327,6 +323,8 @@ namespace TicTacToe
         /// </summary>
         public void RestartGame()
         {
+            GameBoard = new Board();
+
             DetermineTurn();
 
             turnCount = 0;
@@ -466,7 +464,7 @@ namespace TicTacToe
             if (gameResult == GameResult.WinnerX || gameResult == GameResult.WinnerO)
             {
                 Player winner = GetWinningPlayerFromResult(gameResult);
-                declareWinnerMessage += $"{winner.GetName()} ({winner.GetShape()}) won!";
+                declareWinnerMessage += $"{winner.Name} ({winner.Shape}) won!";
             }
             else if (gameResult == GameResult.Tie)
             {
@@ -485,8 +483,8 @@ namespace TicTacToe
         {
             string scoreMessage = "";
             scoreMessage += "SCORE\n";
-            scoreMessage += $"{userPlayer.GetName()}: {userScore}\n";
-            scoreMessage += $"{botPlayer.GetName()}: {botScore}\n";
+            scoreMessage += $"{userPlayer.Name}: {userScore}\n";
+            scoreMessage += $"{botPlayer.Name}: {botScore}\n";
             scoreMessage += $"Tie: {tieScore}\n";
 
             Console.WriteLine(scoreMessage);
@@ -502,7 +500,7 @@ namespace TicTacToe
         {
             foreach (Player player in players)
             {
-                if (player.GetShape() == shape)
+                if (player.Shape == shape)
                 {
                     return player;
                 }
@@ -549,9 +547,9 @@ namespace TicTacToe
             template += $"-Game info-\n";
             template += $"countOfTurns: {turnCount}\n";
             template += $"nextAssignableId: {nextAssignableId}\n";
-            template += $"currentTurnPlayer: {currentTurnPlayer.GetId()}\n";
-            template += $"GetCurrentTurnPlayer(): {GetCurrentTurnPlayer().GetId()}\n";
-            template += $"GetNotCurrentTurnPlayer(): {GetNotCurrentTurnPlayer().GetId()}\n";
+            template += $"currentTurnPlayer: {currentTurnPlayer.Identifier}\n";
+            template += $"GetCurrentTurnPlayer(): {GetCurrentTurnPlayer().Identifier}\n";
+            template += $"GetNotCurrentTurnPlayer(): {GetNotCurrentTurnPlayer().Identifier}\n";
 
             template += $"\n\n-Player info-\n";
             template += $"Player count: {players.Length}\n\n";

@@ -11,6 +11,30 @@ namespace TicTacToe
     /// </summary>
     internal abstract class BotAI
     {
+
+        public static Space GetMove(DifficultyLevel difficultyLevel, Board board)
+        {
+            Space move;
+
+            switch (difficultyLevel)
+            {
+                case DifficultyLevel.Easy:
+                    move = GetRandomMove(board);
+                    break;
+
+                case DifficultyLevel.Medium:
+                    move = GetMinimaxMove(board); // Implement a medium difficulty algorithm.
+                    break;
+
+                case DifficultyLevel.Hard:
+                    move = GetMinimaxMove(board);
+                    break;
+
+                default: throw new ArgumentException($"Unrecognized game difficulty level (difficulty = {difficultyLevel}).");
+            }
+
+            return move;
+        }
         /// <summary>
         /// Returns a random empty space.
         /// </summary>
@@ -19,16 +43,16 @@ namespace TicTacToe
         public static Space GetRandomMove(Board board)
         {
             // If middle space is empty, choose it.
-            bool middleSpaceIsEmpty = board.GetBoardSpaceFromInt(5).GetOccupant() == null;
+            bool middleSpaceIsEmpty = board.GetBoardSpaceFromInt(5).Occupant == null;
             if (middleSpaceIsEmpty)
             {
                 return board.GetBoardSpaceFromInt(5);
             }
 
             Random random = new Random();
-            int maxRandom = board.GetEmptySpaces().Count;
+            int maxRandom = board.EmptySpaces.Count;
             int randomEmptySpaceInt = random.Next(0, maxRandom);
-            Space randomEmptySpace = board.GetEmptySpaces()[randomEmptySpaceInt];
+            Space randomEmptySpace = board.EmptySpaces[randomEmptySpaceInt];
 
             return Space.GetSpaceClone(randomEmptySpace);
         }
@@ -66,7 +90,7 @@ namespace TicTacToe
 
             List<int> scores = new List<int>();
             List<Space> moves = new List<Space>();
-            List<Space> emptySpaces = board.GetEmptySpaces();
+            List<Space> emptySpaces = board.EmptySpaces;
 
             foreach (Space emptySpace in emptySpaces)
             {
