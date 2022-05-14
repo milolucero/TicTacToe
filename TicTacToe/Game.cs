@@ -11,7 +11,6 @@ namespace TicTacToe
     /// </summary>
     internal class Game
     {
-        private Board board;
         private Player[] players;
         private Player userPlayer;
         private Player botPlayer;
@@ -23,11 +22,12 @@ namespace TicTacToe
         private int turnCount;
         private List<GameResult> resultHistory;
 
+
         /// <summary>
         /// Initializes a new instance of the Game class, with a specific board.
         /// The constructor Game(Board) sets fields like turnCount or player state to initial values. It just allows to simulate a game from a non-empty board for testing purposes.
         /// </summary>
-        /// 
+        /// <param name="board">The board to assign to the game.</param>
         public Game(Board board)
         {
             // Create players
@@ -38,7 +38,7 @@ namespace TicTacToe
             }
 
             // Set the board
-            SetBoard(board);
+            GameBoard = board;
 
             // Since X always starts, what shape has the turn depends on the board, so it should be determined each time a new board is set.
             // player[0] (X) always has the first turn.
@@ -55,24 +55,32 @@ namespace TicTacToe
         { 
 
         }
-
+        
         /// <summary>
-        /// Returns the tic-tac-toe Board instance of the game.
+        /// Sets the properties for the board of the game.
         /// </summary>
-        /// <returns>The tic-tac-toe Board instance of the game.</returns>
-        public Board GetBoard()
+        public Board GameBoard
         {
-            return board;
+            get; set;
         }
 
-        /// <summary>
-        /// Sets the board to the game.
-        /// </summary>
-        /// <param name="board">The board to assign to the game.</param>
-        public void SetBoard(Board board)
-        {
-            this.board = board;
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Generates a new unique numeric id, starting from zero.
@@ -127,7 +135,7 @@ namespace TicTacToe
         /// </summary>
         public void DetermineTurn()
         {
-            Shape shapeOfCurrentTurn = Board.GetShapeOfTurnFromBoard(board);
+            Shape shapeOfCurrentTurn = Board.GetShapeOfTurnFromBoard(GameBoard);
             SetCurrentTurnPlayer(GetPlayerFromShape(shapeOfCurrentTurn));
         }
 
@@ -187,10 +195,10 @@ namespace TicTacToe
             SetUserPlayer(userShapeChoice);
 
             // Print initial board
-            GetBoard().PrintBoard();
+            GameBoard.PrintBoard();
 
             // While the game is not over
-            while (board.GetResult() == GameResult.Incomplete)
+            while (GameBoard.GetResult() == GameResult.Incomplete)
             {
                 NewTurn();
             }
@@ -221,7 +229,7 @@ namespace TicTacToe
                 //choiceOfSpaceToOccupy = BotAI.GetRandomMove(board);
                 
                 // Algorithm: Minimax
-                choiceOfSpaceToOccupy = BotAI.GetMinimaxMove(board);
+                choiceOfSpaceToOccupy = BotAI.GetMinimaxMove(GameBoard);
             }
             else
             {
@@ -229,18 +237,18 @@ namespace TicTacToe
             }
 
             // Occupy the space chosen and assign that space to the player who has the turn.
-            Board.OccupySpace(board, choiceOfSpaceToOccupy, currentTurnPlayer);
+            Board.OccupySpace(GameBoard, choiceOfSpaceToOccupy, currentTurnPlayer);
 
             // Print current state of the board
-            board.PrintBoard();
+            GameBoard.PrintBoard();
 
             // If there is a winner or draw
-            GameResult gameResult = Board.GetResultFromBoard(board);
+            GameResult gameResult = Board.GetResultFromBoard(GameBoard);
             bool gameIsOver = (gameResult != GameResult.Incomplete);
             if (gameIsOver)
             {
                 // Update state.
-                board.SetResult(gameResult);
+                GameBoard.SetResult(gameResult);
                 UpdateScores();
 
                 // Display winner and scores.
@@ -266,15 +274,15 @@ namespace TicTacToe
         /// <exception cref="Exception"></exception>
         public void UpdateScores()
         {
-            GameResult gameResult = board.GetResult();
+            GameResult gameResult = GameBoard.GetResult();
 
             if (gameResult == GameResult.Incomplete)
             {
                 throw new Exception($"Scores can't be updated because game is incomplete.");
             }
 
-            bool hasWinner = (board.GetResult() == GameResult.WinnerX) || (board.GetResult() == GameResult.WinnerO);
-            bool hasTie = board.GetResult() == GameResult.Tie;
+            bool hasWinner = (GameBoard.GetResult() == GameResult.WinnerX) || (GameBoard.GetResult() == GameResult.WinnerO);
+            bool hasTie = GameBoard.GetResult() == GameResult.Tie;
 
             if (hasWinner)
             {
@@ -319,8 +327,6 @@ namespace TicTacToe
         /// </summary>
         public void RestartGame()
         {
-            board = new Board();
-
             DetermineTurn();
 
             turnCount = 0;
@@ -387,7 +393,7 @@ namespace TicTacToe
                 if (spaceInputIsValidInt)
                 {
                     spaceNumber = int.Parse(spaceInput);
-                    chosenSpace = board.GetBoardSpaceFromInt(spaceNumber);
+                    chosenSpace = GameBoard.GetBoardSpaceFromInt(spaceNumber);
 
                     // Validate if chosen space is already taken.
                     if (chosenSpace.IsOccupied())
@@ -405,7 +411,7 @@ namespace TicTacToe
                 }
             } while (!spaceIsValid);
 
-            return board.GetBoardSpaceFromInt(spaceNumber);
+            return GameBoard.GetBoardSpaceFromInt(spaceNumber);
         }
 
         /// <summary>

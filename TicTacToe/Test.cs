@@ -42,7 +42,8 @@ namespace TicTacToe
         public static void TestTurnSwitching()
         {
             Game game = new Game();
-            Board board = game.GetBoard();
+            Board board = game.GameBoard;
+
 
             // Simulate moves
             Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // X
@@ -70,12 +71,12 @@ namespace TicTacToe
 
         public static void TestBoard(Game game)
         {
-            Console.WriteLine(game.GetBoard());
+            Console.WriteLine(game.GameBoard);
         }
 
         public static void TestOccupySpace(Game game)
         {
-            Board board = game.GetBoard();
+            Board board = game.GameBoard;
             Player player = game.GetUserPlayer();
 
             Board.OccupySpace(board, board.GetSpace(new Position(1, 0)), player);
