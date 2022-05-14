@@ -11,9 +11,6 @@ namespace TicTacToe
     /// </summary>
     internal class Space
     {
-        private readonly Position position;
-        private Shape? occupant;
-
         /// <summary>
         /// Initializes a new instance of the Space class, with specified position and occupant.
         /// </summary>
@@ -21,8 +18,8 @@ namespace TicTacToe
         /// <param name="occupant">The player that occupies the space.</param>
         public Space(Position position, Shape? occupant)
         {
-            this.position = position;
-            this.occupant = occupant;
+            this.Position = position;
+            this.Occupant = occupant;
         }
 
         /// <summary>
@@ -35,30 +32,19 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns the position of the space.
+        /// Property representing the position (coordinates) of the board where the space is located.
         /// </summary>
-        /// <returns>The position of the space.</returns>
-        public Position GetPosition()
+        public Position Position
         {
-            return position;
+            get;
         }
 
         /// <summary>
-        /// Returns the player who occupies the space, or null if it is unoccupied.
+        /// Property representing the player who occupies the space, or null if it is unoccupied.
         /// </summary>
-        /// <returns>The player who occupies the space, or null if it is unoccupied.</returns>
-        public Shape? GetOccupant()
+        public Shape? Occupant
         {
-            return occupant;
-        }
-
-        /// <summary>
-        /// Sets a specified player to occupy the space, or sets the space empty if null.
-        /// </summary>
-        /// <param name="occupant">The specified player to occupy the space (or null to set it empty).</param>
-        public void SetOccupant(Shape? occupant)
-        {
-            this.occupant = occupant;
+            get; set;
         }
 
         /// <summary>
@@ -67,15 +53,7 @@ namespace TicTacToe
         /// <returns>True if the space is occupied by a player, false otherwise.</returns>
         public bool IsOccupied()
         {
-            return occupant != null;
-        }
-
-        public override string ToString()
-        {
-            string template = "";
-            template += $"Space ({GetPosition().GetX()}, {GetPosition().GetY()}) - ";
-            template += $"{(IsOccupied() ? GetOccupant() : "Empty")}";
-            return template;
+            return Occupant != null;
         }
 
         /// <summary>
@@ -85,11 +63,19 @@ namespace TicTacToe
         /// <returns>A copy of the given space.</returns>
         public static Space GetSpaceClone(Space space)
         {
-            Position cloneSpacePosition = new Position(space.GetPosition().GetX(), space.GetPosition().GetY());
+            Position cloneSpacePosition = new Position(space.Position.X, space.Position.Y);
 
-            Space cloneSpace = new Space(cloneSpacePosition, space.GetOccupant());
+            Space cloneSpace = new Space(cloneSpacePosition, space.Occupant);
 
             return cloneSpace;
+        }
+
+        public override string ToString()
+        {
+            string template = "";
+            template += $"Space ({this.Position.X}, {this.Position.Y}) - ";
+            template += $"{(IsOccupied() ? Occupant : "Empty")}";
+            return template;
         }
     }
 }

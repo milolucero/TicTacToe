@@ -13,7 +13,6 @@ namespace TicTacToe
     {
         private readonly int height;
         private readonly int width;
-        private Space[] spaces;
         private List<Space> emptySpaces;
         private GameResult result;
 
@@ -26,7 +25,7 @@ namespace TicTacToe
         {
             height = Rule.GetBoardDimensions().height;
             width = Rule.GetBoardDimensions().width;
-            this.spaces = spaces;
+            this.Spaces = spaces;
             SetEmptySpaces(GetEmptySpaces());
             SetResult(GetResultFromBoard(this));
         }
@@ -40,21 +39,39 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns an array containing the board spaces.
+        /// Property representing an array of the board's spaces.
         /// </summary>
-        /// <returns>An array containing the board spaces.</returns>
-        public Space[] GetSpaces()
+        public Space[] Spaces
         {
-            return spaces;
+            get; set;
         }
 
         /// <summary>
-        /// Sets the spaces of the board to the specified array of spaces.
+        /// Returns a list containing the currently empty spaces of the board.
         /// </summary>
-        /// <param name="spaces">The array of spaces.</param>
-        public void SetSpaces(Space[] spaces)
+        /// <returns>A list containing the currently empty spaces of the board.</returns>
+        public List<Space> GetEmptySpaces()
         {
-            this.spaces = spaces;
+            List<Space> emptySpaces = new List<Space>();
+
+            foreach (Space space in this.Spaces)
+            {
+                if (!space.IsOccupied())
+                {
+                    emptySpaces.Add(space);
+                }
+            }
+
+            return emptySpaces;
+        }
+
+        /// <summary>
+        /// Sets the empty spaces of the board to the specified list of empty spaces.
+        /// </summary>
+        /// <param name="emptySpaces">The list of empty spaces.</param>
+        public void SetEmptySpaces(List<Space> emptySpaces)
+        {
+            this.emptySpaces = emptySpaces;
         }
 
         /// <summary>
@@ -84,34 +101,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns a list containing the currently empty spaces of the board.
-        /// </summary>
-        /// <returns>A list containing the currently empty spaces of the board.</returns>
-        public List<Space> GetEmptySpaces()
-        {
-            List<Space> emptySpaces = new List<Space>();
-
-            foreach (Space space in spaces)
-            {
-                if (!space.IsOccupied())
-                {
-                    emptySpaces.Add(space);
-                }
-            }
-
-            return emptySpaces;
-        }
-
-        /// <summary>
-        /// Sets the empty spaces of the board to the specified list of empty spaces.
-        /// </summary>
-        /// <param name="emptySpaces">The list of empty spaces.</param>
-        public void SetEmptySpaces(List<Space> emptySpaces)
-        {
-            this.emptySpaces = emptySpaces;
-        }
-
-        /// <summary>
         /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated. Returns true if the space was taken succesfully, false if it was already occupied.
         /// </summary>
         /// <param name="board">The board.</param>
@@ -127,7 +116,7 @@ namespace TicTacToe
             {
                 // Make a clone of the space, set the occupant, and assign it to the same space position in the given board. This will avoid mutating the given space, allowing for simulating moves without affecting the original argument's state.
                 Space spaceClone = Space.GetSpaceClone(space);
-                spaceClone.SetOccupant(shapeToPlay);
+                spaceClone.Occupant = shapeToPlay;
                 board.SetSpace(spaceClone);
 
                 // If given a player as an argument, add the given space to the spaces that belong to this player.
@@ -196,49 +185,49 @@ namespace TicTacToe
 
             if (spaces[0].IsOccupied())
             {
-                if ((spaces[wayOfWinning1[0]].GetOccupant() == spaces[wayOfWinning1[1]].GetOccupant() && spaces[wayOfWinning1[1]].GetOccupant() == spaces[wayOfWinning1[2]].GetOccupant()) ||
-                    (spaces[wayOfWinning2[0]].GetOccupant() == spaces[wayOfWinning2[1]].GetOccupant() && spaces[wayOfWinning2[1]].GetOccupant() == spaces[wayOfWinning2[2]].GetOccupant()) ||
-                    (spaces[wayOfWinning3[0]].GetOccupant() == spaces[wayOfWinning3[1]].GetOccupant() && spaces[wayOfWinning3[1]].GetOccupant() == spaces[wayOfWinning3[2]].GetOccupant()))
+                if ((spaces[wayOfWinning1[0]].Occupant == spaces[wayOfWinning1[1]].Occupant && spaces[wayOfWinning1[1]].Occupant == spaces[wayOfWinning1[2]].Occupant) ||
+                    (spaces[wayOfWinning2[0]].Occupant == spaces[wayOfWinning2[1]].Occupant && spaces[wayOfWinning2[1]].Occupant == spaces[wayOfWinning2[2]].Occupant) ||
+                    (spaces[wayOfWinning3[0]].Occupant == spaces[wayOfWinning3[1]].Occupant && spaces[wayOfWinning3[1]].Occupant == spaces[wayOfWinning3[2]].Occupant))
                 {
                     hasWinner = true;
-                    winnerShape = spaces[0].GetOccupant();
+                    winnerShape = spaces[0].Occupant;
                 }
             }
 
             if (spaces[1].IsOccupied())
             {
-                if (spaces[wayOfWinning4[0]].GetOccupant() == spaces[wayOfWinning4[1]].GetOccupant() && spaces[wayOfWinning4[1]].GetOccupant() == spaces[wayOfWinning4[2]].GetOccupant())
+                if (spaces[wayOfWinning4[0]].Occupant == spaces[wayOfWinning4[1]].Occupant && spaces[wayOfWinning4[1]].Occupant == spaces[wayOfWinning4[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[1].GetOccupant();
+                    winnerShape = spaces[1].Occupant;
                 }
             }
 
             if (spaces[2].IsOccupied())
             {
-                if ((spaces[wayOfWinning5[0]].GetOccupant() == spaces[wayOfWinning5[1]].GetOccupant() && spaces[wayOfWinning5[1]].GetOccupant() == spaces[wayOfWinning5[2]].GetOccupant()) ||
-                    (spaces[wayOfWinning6[0]].GetOccupant() == spaces[wayOfWinning6[1]].GetOccupant() && spaces[wayOfWinning6[1]].GetOccupant() == spaces[wayOfWinning6[2]].GetOccupant()))
+                if ((spaces[wayOfWinning5[0]].Occupant == spaces[wayOfWinning5[1]].Occupant && spaces[wayOfWinning5[1]].Occupant == spaces[wayOfWinning5[2]].Occupant) ||
+                    (spaces[wayOfWinning6[0]].Occupant == spaces[wayOfWinning6[1]].Occupant && spaces[wayOfWinning6[1]].Occupant == spaces[wayOfWinning6[2]].Occupant))
                 {
                     hasWinner = true;
-                    winnerShape = spaces[2].GetOccupant();
+                    winnerShape = spaces[2].Occupant;
                 }
             }
 
             if (spaces[3].IsOccupied())
             {
-                if (spaces[wayOfWinning7[0]].GetOccupant() == spaces[wayOfWinning7[1]].GetOccupant() && spaces[wayOfWinning7[1]].GetOccupant() == spaces[wayOfWinning7[2]].GetOccupant())
+                if (spaces[wayOfWinning7[0]].Occupant == spaces[wayOfWinning7[1]].Occupant && spaces[wayOfWinning7[1]].Occupant == spaces[wayOfWinning7[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[3].GetOccupant();
+                    winnerShape = spaces[3].Occupant;
                 }
             }
 
             if (spaces[6].IsOccupied())
             {
-                if (spaces[wayOfWinning8[0]].GetOccupant() == spaces[wayOfWinning8[1]].GetOccupant() && spaces[wayOfWinning8[1]].GetOccupant() == spaces[wayOfWinning8[2]].GetOccupant())
+                if (spaces[wayOfWinning8[0]].Occupant == spaces[wayOfWinning8[1]].Occupant && spaces[wayOfWinning8[1]].Occupant == spaces[wayOfWinning8[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[6].GetOccupant();
+                    winnerShape = spaces[6].Occupant;
                 }
             }
 
@@ -264,14 +253,14 @@ namespace TicTacToe
         {
             foreach (Space space in spaces)
             {
-                if (space.GetPosition().GetX() == position.GetX() &&
-                    space.GetPosition().GetY() == position.GetY())
+                if (space.Position.X == position.X &&
+                    space.Position.Y == position.Y)
                 {
                     return space;
                 }
             }
 
-            throw new Exception($"No space matched the position ({position.GetX()}, {position.GetY()}).");
+            throw new Exception($"No space matched the position ({position.X}, {position.Y}).");
         }
 
         /// <summary>
@@ -282,8 +271,8 @@ namespace TicTacToe
         {
             // To get a 0-8 position from a (x, y) coordinate, we add x to y times 3.
             // BUG: Positions are inverted, a space(2, 0) should be in position x = 2, y = 0, but is instead in x = 0, y = 2. Inverting the variables here is a hotfix, but needs to be fixed before it cascades into other bugs.
-            int y = space.GetPosition().GetY();
-            int x = space.GetPosition().GetX();
+            int y = space.Position.Y;
+            int x = space.Position.X;
             int arrayPosition = y + (x * 3); // The correct formula should be x + (y * 3)
             GetSpaces()[arrayPosition] = space;
         }
@@ -326,13 +315,13 @@ namespace TicTacToe
 
             for (int i = 0; i < spaces.Length; i++)
             {
-                if (spaces[i].GetOccupant() is null)
+                if (spaces[i].Occupant is null)
                 {
                     shapes[i] = " ";
                 }
                 else
                 {
-                    shapes[i] = spaces[i].GetOccupant().ToString();
+                    shapes[i] = spaces[i].Occupant.ToString();
                 }
             }
 
@@ -449,13 +438,13 @@ namespace TicTacToe
 
             foreach (Space space in board.GetSpaces())
             {
-                if (space.GetOccupant() is not null)
+                if (space.Occupant is not null)
                 {
-                    if (space.GetOccupant() == Shape.X)
+                    if (space.Occupant == Shape.X)
                     {
                         countOfX++;
                     }
-                    else if (space.GetOccupant() == Shape.O)
+                    else if (space.Occupant == Shape.O)
                     {
                         countOfO++;
                     }
@@ -483,7 +472,7 @@ namespace TicTacToe
                     Space space = spaces[count];
 
                     // Get a string representation of the shape in the given space, or "." if null.
-                    string shape = space.GetOccupant() is null ? "." : space.GetOccupant().ToString();
+                    string shape = space.Occupant is null ? "." : space.Occupant.ToString();
 
                     template += $"{shape}";
                     count++;

@@ -56,8 +56,8 @@ namespace TicTacToe
 
             Console.WriteLine("Turn belongs to");
             Console.WriteLine($"Expected: X");
-            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().GetShape()}");
-            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().GetShape()}");
+            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().Shape}");
+            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().Shape}");
 
             Console.WriteLine("Switching turns...\n");
             Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // X
@@ -65,8 +65,8 @@ namespace TicTacToe
 
             Console.WriteLine("Turn belongs to");
             Console.WriteLine($"Expected: O");
-            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().GetShape()}");
-            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().GetShape()}");
+            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().Shape}");
+            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().Shape}");
         }
 
         public static void TestBoard(Game game)
@@ -85,7 +85,7 @@ namespace TicTacToe
 
         public static void TestEmptySpaces(Board board)
         {
-            List<Space> emptySpaces = board.GetEmptySpaces();
+            List<Space> emptySpaces = board.EmptySpaces;
             for (int i = 0; i < emptySpaces.Count(); i++)
             {
                 Console.WriteLine(emptySpaces[i].ToString());
