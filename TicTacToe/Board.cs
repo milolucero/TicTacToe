@@ -14,7 +14,6 @@ namespace TicTacToe
         private readonly int height;
         private readonly int width;
         private List<Space> emptySpaces;
-        private GameResult result;
 
 
         /// <summary>
@@ -26,8 +25,7 @@ namespace TicTacToe
             height = Rule.GetBoardDimensions().height;
             width = Rule.GetBoardDimensions().width;
             this.Spaces = spaces;
-            SetEmptySpaces(GetEmptySpaces());
-            SetResult(GetResultFromBoard(this));
+            this.Result = GetResultFromBoard(this);
         }
 
         /// <summary>
@@ -46,11 +44,30 @@ namespace TicTacToe
             get; set;
         }
 
+        public List<Space> EmptySpaces
+        {
+            get
+            {
+                return GetEmptySpaces();
+            }
+
+            set
+            {
+                this.emptySpaces = value;
+            }
+        }
+
+        public GameResult Result
+        {
+            get; set;
+        }
+
         /// <summary>
-        /// Returns a list containing the currently empty spaces of the board.
+        /// Returns a list containing the currently empty spaces of the given board.
         /// </summary>
+        /// <param name="board">The board object.</param>
         /// <returns>A list containing the currently empty spaces of the board.</returns>
-        public List<Space> GetEmptySpaces()
+        public List<Space> GetEmptySpaces(Board board)
         {
             List<Space> emptySpaces = new List<Space>();
 
@@ -65,13 +82,9 @@ namespace TicTacToe
             return emptySpaces;
         }
 
-        /// <summary>
-        /// Sets the empty spaces of the board to the specified list of empty spaces.
-        /// </summary>
-        /// <param name="emptySpaces">The list of empty spaces.</param>
-        public void SetEmptySpaces(List<Space> emptySpaces)
+        public List<Space> GetEmptySpaces()
         {
-            this.emptySpaces = emptySpaces;
+            return GetEmptySpaces(this);
         }
 
         /// <summary>
@@ -125,9 +138,9 @@ namespace TicTacToe
                     player.AddToOccupiedSpaces(space);
                 }
 
-                List<Space> emptySpaces = board.GetEmptySpaces();
+                List<Space> emptySpaces = board.EmptySpaces;
                 emptySpaces.Remove(space);
-                board.SetEmptySpaces(emptySpaces);
+                board.EmptySpaces = emptySpaces;
 
                 spaceOccupiedSuccessfully = true;
             }
@@ -183,51 +196,51 @@ namespace TicTacToe
 
             int[][] waysOfWinning = { wayOfWinning1, wayOfWinning2, wayOfWinning3, wayOfWinning4, wayOfWinning5, wayOfWinning6, wayOfWinning7, wayOfWinning8 };
 
-            if (spaces[0].IsOccupied())
+            if (Spaces[0].IsOccupied())
             {
-                if ((spaces[wayOfWinning1[0]].Occupant == spaces[wayOfWinning1[1]].Occupant && spaces[wayOfWinning1[1]].Occupant == spaces[wayOfWinning1[2]].Occupant) ||
-                    (spaces[wayOfWinning2[0]].Occupant == spaces[wayOfWinning2[1]].Occupant && spaces[wayOfWinning2[1]].Occupant == spaces[wayOfWinning2[2]].Occupant) ||
-                    (spaces[wayOfWinning3[0]].Occupant == spaces[wayOfWinning3[1]].Occupant && spaces[wayOfWinning3[1]].Occupant == spaces[wayOfWinning3[2]].Occupant))
+                if ((Spaces[wayOfWinning1[0]].Occupant == Spaces[wayOfWinning1[1]].Occupant && Spaces[wayOfWinning1[1]].Occupant == Spaces[wayOfWinning1[2]].Occupant) ||
+                    (Spaces[wayOfWinning2[0]].Occupant == Spaces[wayOfWinning2[1]].Occupant && Spaces[wayOfWinning2[1]].Occupant == Spaces[wayOfWinning2[2]].Occupant) ||
+                    (Spaces[wayOfWinning3[0]].Occupant == Spaces[wayOfWinning3[1]].Occupant && Spaces[wayOfWinning3[1]].Occupant == Spaces[wayOfWinning3[2]].Occupant))
                 {
                     hasWinner = true;
-                    winnerShape = spaces[0].Occupant;
+                    winnerShape = Spaces[0].Occupant;
                 }
             }
 
-            if (spaces[1].IsOccupied())
+            if (Spaces[1].IsOccupied())
             {
-                if (spaces[wayOfWinning4[0]].Occupant == spaces[wayOfWinning4[1]].Occupant && spaces[wayOfWinning4[1]].Occupant == spaces[wayOfWinning4[2]].Occupant)
+                if (Spaces[wayOfWinning4[0]].Occupant == Spaces[wayOfWinning4[1]].Occupant && Spaces[wayOfWinning4[1]].Occupant == Spaces[wayOfWinning4[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[1].Occupant;
+                    winnerShape = Spaces[1].Occupant;
                 }
             }
 
-            if (spaces[2].IsOccupied())
+            if (Spaces[2].IsOccupied())
             {
-                if ((spaces[wayOfWinning5[0]].Occupant == spaces[wayOfWinning5[1]].Occupant && spaces[wayOfWinning5[1]].Occupant == spaces[wayOfWinning5[2]].Occupant) ||
-                    (spaces[wayOfWinning6[0]].Occupant == spaces[wayOfWinning6[1]].Occupant && spaces[wayOfWinning6[1]].Occupant == spaces[wayOfWinning6[2]].Occupant))
+                if ((Spaces[wayOfWinning5[0]].Occupant == Spaces[wayOfWinning5[1]].Occupant && Spaces[wayOfWinning5[1]].Occupant == Spaces[wayOfWinning5[2]].Occupant) ||
+                    (Spaces[wayOfWinning6[0]].Occupant == Spaces[wayOfWinning6[1]].Occupant && Spaces[wayOfWinning6[1]].Occupant == Spaces[wayOfWinning6[2]].Occupant))
                 {
                     hasWinner = true;
-                    winnerShape = spaces[2].Occupant;
+                    winnerShape = Spaces[2].Occupant;
                 }
             }
 
-            if (spaces[3].IsOccupied())
+            if (Spaces[3].IsOccupied())
             {
-                if (spaces[wayOfWinning7[0]].Occupant == spaces[wayOfWinning7[1]].Occupant && spaces[wayOfWinning7[1]].Occupant == spaces[wayOfWinning7[2]].Occupant)
+                if (Spaces[wayOfWinning7[0]].Occupant == Spaces[wayOfWinning7[1]].Occupant && Spaces[wayOfWinning7[1]].Occupant == Spaces[wayOfWinning7[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[3].Occupant;
+                    winnerShape = Spaces[3].Occupant;
                 }
             }
 
-            if (spaces[6].IsOccupied())
+            if (Spaces[6].IsOccupied())
             {
-                if (spaces[wayOfWinning8[0]].Occupant == spaces[wayOfWinning8[1]].Occupant && spaces[wayOfWinning8[1]].Occupant == spaces[wayOfWinning8[2]].Occupant)
+                if (Spaces[wayOfWinning8[0]].Occupant == Spaces[wayOfWinning8[1]].Occupant && Spaces[wayOfWinning8[1]].Occupant == Spaces[wayOfWinning8[2]].Occupant)
                 {
                     hasWinner = true;
-                    winnerShape = spaces[6].Occupant;
+                    winnerShape = Spaces[6].Occupant;
                 }
             }
 
@@ -240,7 +253,7 @@ namespace TicTacToe
         /// <returns>True if the board is tied (has no empty spaces left); otherwise, false.</returns>
         public bool CheckTie()
         {
-            return emptySpaces.Count == 0;
+            return EmptySpaces.Count == 0;
         }
 
         /// <summary>
@@ -251,7 +264,7 @@ namespace TicTacToe
         /// <exception cref="Exception">If no result was found.</exception>
         public Space GetSpace(Position position)
         {
-            foreach (Space space in spaces)
+            foreach (Space space in Spaces)
             {
                 if (space.Position.X == position.X &&
                     space.Position.Y == position.Y)
@@ -274,7 +287,7 @@ namespace TicTacToe
             int y = space.Position.Y;
             int x = space.Position.X;
             int arrayPosition = y + (x * 3); // The correct formula should be x + (y * 3)
-            GetSpaces()[arrayPosition] = space;
+            Spaces[arrayPosition] = space;
         }
 
         /// <summary>
@@ -287,19 +300,20 @@ namespace TicTacToe
             Board clone = new Board();
 
             // Clone spaces of board
-            for (int i = 0; i < board.GetSpaces().Length; i++)
+            for (int i = 0; i < board.Spaces.Length; i++)
             {
-                clone.GetSpaces()[i] = Space.GetSpaceClone(board.GetSpaces()[i]);
+                clone.Spaces[i] = Space.GetSpaceClone(board.Spaces[i]);
             }
 
             // Clone array of empty spaces
-            for (int i = 0; i < board.GetEmptySpaces().Count; i++)
+            for (int i = 0; i < board.EmptySpaces.Count; i++)
             {
-                clone.GetEmptySpaces()[i] = Space.GetSpaceClone(board.GetEmptySpaces()[i]);
+                clone.EmptySpaces[i] = Space.GetSpaceClone(board.EmptySpaces[i]);
             }
 
             // Set result
-            clone.SetResult(GetResultFromBoard(clone));
+            // clone.Result = GetResultFromBoard(clone);
+            clone.Result = board.Result;
 
             return clone;
         }
@@ -311,17 +325,17 @@ namespace TicTacToe
         {
             string template = "";
 
-            string[] shapes = new string[spaces.Length];
+            string[] shapes = new string[Spaces.Length];
 
-            for (int i = 0; i < spaces.Length; i++)
+            for (int i = 0; i < Spaces.Length; i++)
             {
-                if (spaces[i].Occupant is null)
+                if (Spaces[i].Occupant is null)
                 {
                     shapes[i] = " ";
                 }
                 else
                 {
-                    shapes[i] = spaces[i].Occupant.ToString();
+                    shapes[i] = Spaces[i].Occupant.ToString();
                 }
             }
 
@@ -345,7 +359,7 @@ namespace TicTacToe
         /// <returns>The space located in the board position represented by the number.</returns>
         public Space GetBoardSpaceFromInt(int number)
         {
-            return spaces[number - 1];
+            return Spaces[number - 1];
         }
 
         /// <summary>
@@ -361,12 +375,12 @@ namespace TicTacToe
             int positionOnArray = x + (y * 3);
 
             // Check if space is in range
-            if (positionOnArray < spaces.Length)
+            if (positionOnArray < Spaces.Length)
             {
-                return spaces[(x + 1) + (y * 3)];
+                return Spaces[(x + 1) + (y * 3)];
             }
 
-            throw new Exception($"Space out of bounds. Trying to get space ({x}, {y}), equivalent to position [{positionOnArray}] of an array of {spaces.Length} elements.");            
+            throw new Exception($"Space out of bounds. Trying to get space ({x}, {y}), equivalent to position [{positionOnArray}] of an array of {Spaces.Length} elements.");            
         }
 
         /// <summary>
@@ -409,24 +423,6 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns the result of the game.
-        /// </summary>
-        /// <returns>The result of the game.</returns>
-        public GameResult GetResult()
-        {
-            return result;
-        }
-
-        /// <summary>
-        /// Sets the result of the game.
-        /// </summary>
-        /// <param name="result">The result of the game.</param>
-        public void SetResult(GameResult result)
-        {
-            this.result = result;
-        }
-
-        /// <summary>
         /// Returns the shape that should play next based on a given board. Assumes that X always starts.
         /// </summary>
         /// <param name="board">The board to check.</param>
@@ -436,7 +432,7 @@ namespace TicTacToe
             int countOfX = 0;
             int countOfO = 0;
 
-            foreach (Space space in board.GetSpaces())
+            foreach (Space space in board.Spaces)
             {
                 if (space.Occupant is not null)
                 {
@@ -469,7 +465,7 @@ namespace TicTacToe
 
                 for (int j = 0; j < width; j++)
                 {
-                    Space space = spaces[count];
+                    Space space = Spaces[count];
 
                     // Get a string representation of the shape in the given space, or "." if null.
                     string shape = space.Occupant is null ? "." : space.Occupant.ToString();

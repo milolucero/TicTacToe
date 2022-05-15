@@ -12,10 +12,10 @@ namespace TicTacToe
     internal class Space
     {
         /// <summary>
-        /// Initializes a new instance of the Space class, with specified position and occupant.
+        /// Initializes a new instance of the Space class, with specified position and occupant shape.
         /// </summary>
         /// <param name="position">The position where the space is located.</param>
-        /// <param name="occupant">The player that occupies the space.</param>
+        /// <param name="occupant">The shape that occupies the space.</param>
         public Space(Position position, Shape? occupant)
         {
             this.Position = position;
@@ -53,7 +53,7 @@ namespace TicTacToe
         /// <returns>True if the space is occupied by a player, false otherwise.</returns>
         public bool IsOccupied()
         {
-            return Occupant != null;
+            return (Occupant is not null);
         }
 
         /// <summary>

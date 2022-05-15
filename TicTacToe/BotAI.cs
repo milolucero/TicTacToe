@@ -91,6 +91,7 @@ namespace TicTacToe
             List<int> scores = new List<int>();
             List<Space> moves = new List<Space>();
             List<Space> emptySpaces = board.EmptySpaces;
+            // List<Space> emptySpaces = Board.GetListOfEmptySpaces(board); Testing to solve the minimax bug
 
             foreach (Space emptySpace in emptySpaces)
             {

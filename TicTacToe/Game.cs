@@ -198,7 +198,7 @@ namespace TicTacToe
             GameBoard.PrintBoard();
 
             // While the game is not over
-            while (GameBoard.GetResult() == GameResult.Incomplete)
+            while (GameBoard.Result == GameResult.Incomplete)
             {
                 NewTurn();
             }
@@ -244,7 +244,7 @@ namespace TicTacToe
             if (gameIsOver)
             {
                 // Update state.
-                GameBoard.SetResult(gameResult);
+                GameBoard.Result = gameResult;
                 UpdateScores();
 
                 // Display winner and scores.
@@ -270,15 +270,15 @@ namespace TicTacToe
         /// <exception cref="Exception"></exception>
         public void UpdateScores()
         {
-            GameResult gameResult = GameBoard.GetResult();
+            GameResult gameResult = GameBoard.Result;
 
             if (gameResult == GameResult.Incomplete)
             {
                 throw new Exception($"Scores can't be updated because game is incomplete.");
             }
 
-            bool hasWinner = (GameBoard.GetResult() == GameResult.WinnerX) || (GameBoard.GetResult() == GameResult.WinnerO);
-            bool hasTie = GameBoard.GetResult() == GameResult.Tie;
+            bool hasWinner = (GameBoard.Result == GameResult.WinnerX) || (GameBoard.Result == GameResult.WinnerO);
+            bool hasTie = GameBoard.Result == GameResult.Tie;
 
             if (hasWinner)
             {
