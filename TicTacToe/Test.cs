@@ -42,7 +42,7 @@ namespace TicTacToe
         public static void TestTurnSwitching()
         {
             Game game = new Game();
-            Board board = game.GameBoard;
+            Board board = game.Board;
 
 
             // Simulate moves
@@ -56,8 +56,8 @@ namespace TicTacToe
 
             Console.WriteLine("Turn belongs to");
             Console.WriteLine($"Expected: X");
-            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().Shape}");
-            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().Shape}");
+            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.CurrentTurnPlayer.Shape}");
+            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.NotCurrentTurnPlayer.Shape}");
 
             Console.WriteLine("Switching turns...\n");
             Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // X
@@ -65,18 +65,18 @@ namespace TicTacToe
 
             Console.WriteLine("Turn belongs to");
             Console.WriteLine($"Expected: O");
-            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.GetCurrentTurnPlayer().Shape}");
-            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.GetNotCurrentTurnPlayer().Shape}");
+            Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.CurrentTurnPlayer.Shape}");
+            Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.NotCurrentTurnPlayer.Shape}");
         }
 
         public static void TestBoard(Game game)
         {
-            Console.WriteLine(game.GameBoard);
+            Console.WriteLine(game.Board);
         }
 
         public static void TestOccupySpace(Game game)
         {
-            Board board = game.GameBoard;
+            Board board = game.Board;
             Player player = game.GetUserPlayer();
 
             Board.OccupySpace(board, board.GetSpace(new Position(1, 0)), player);

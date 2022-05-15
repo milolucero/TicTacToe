@@ -13,8 +13,6 @@ namespace TicTacToe
     {
         private readonly int height;
         private readonly int width;
-        private List<Space> emptySpaces;
-
 
         /// <summary>
         /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
@@ -44,6 +42,9 @@ namespace TicTacToe
             get; set;
         }
 
+        /// <summary>
+        /// Property representing a list of the empty spaces of the board.
+        /// </summary>
         public List<Space> EmptySpaces
         {
             get
@@ -53,7 +54,7 @@ namespace TicTacToe
 
             set
             {
-                this.emptySpaces = value;
+
             }
         }
 
@@ -71,7 +72,7 @@ namespace TicTacToe
         {
             List<Space> emptySpaces = new List<Space>();
 
-            foreach (Space space in this.Spaces)
+            foreach (Space space in board.Spaces)
             {
                 if (!space.IsOccupied())
                 {
@@ -82,6 +83,10 @@ namespace TicTacToe
             return emptySpaces;
         }
 
+        /// <summary>
+        /// Returns a list containing the currently empty spaces of the current board.
+        /// </summary>
+        /// <returns>A list containing the currently empty spaces of the current board.</returns>
         public List<Space> GetEmptySpaces()
         {
             return GetEmptySpaces(this);

@@ -17,11 +17,9 @@ namespace TicTacToe
         private int userScore;
         private int botScore;
         private int tieScore;
-        private Player currentTurnPlayer;
         private int nextAssignableId;
         private int turnCount;
         private List<GameResult> resultHistory;
-
 
         /// <summary>
         /// Initializes a new instance of the Game class, with a specific board.
@@ -38,7 +36,7 @@ namespace TicTacToe
             }
 
             // Set the board
-            GameBoard = board;
+            this.Board = board;
 
             // Since X always starts, what shape has the turn depends on the board, so it should be determined each time a new board is set.
             // player[0] (X) always has the first turn.
@@ -59,28 +57,10 @@ namespace TicTacToe
         /// <summary>
         /// Sets the properties for the board of the game.
         /// </summary>
-        public Board GameBoard
+        public Board Board
         {
             get; set;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Generates a new unique numeric id, starting from zero.
@@ -96,38 +76,30 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Returns the instance of the player who has the current turn to play.
+        /// Property representing the player who has the current turn to play on the game.
         /// </summary>
-        /// <returns>The instance of the player who has the current turn to play.</returns>
-        public Player GetCurrentTurnPlayer()
+        public Player CurrentTurnPlayer
         {
-            return currentTurnPlayer;
+            get; set;
         }
 
         /// <summary>
-        /// Returns the instance of the player who does not have the current turn to play.
+        /// Property representing the player who does not have the current turn to play on the game.
         /// </summary>
-        /// <returns>The instance of the player who does not have the current turn to play.</returns>
-        public Player GetNotCurrentTurnPlayer()
+        public Player NotCurrentTurnPlayer
         {
-            foreach (Player player in players)
+            get
             {
-                if (player != currentTurnPlayer)
+                foreach (Player player in players)
                 {
-                    return player;
+                    if (player != CurrentTurnPlayer)
+                    {
+                        return player;
+                    }
                 }
+
+                throw new Exception("No player without current turn was found.");
             }
-
-            throw new Exception("No player without current turn was found.");
-        }
-
-        /// <summary>
-        /// Sets the current turn to play to the specified player.
-        /// </summary>
-        /// <param name="player">The player who is being set to have the current turn to play.</param>
-        public void SetCurrentTurnPlayer(Player player)
-        {
-            currentTurnPlayer = player;
         }
 
         /// <summary>
@@ -135,8 +107,8 @@ namespace TicTacToe
         /// </summary>
         public void DetermineTurn()
         {
-            Shape shapeOfCurrentTurn = Board.GetShapeOfTurnFromBoard(GameBoard);
-            SetCurrentTurnPlayer(GetPlayerFromShape(shapeOfCurrentTurn));
+            Shape shapeOfCurrentTurn = Board.GetShapeOfTurnFromBoard(Board);
+            CurrentTurnPlayer = GetPlayerFromShape(shapeOfCurrentTurn);
         }
 
         /// <summary>
@@ -195,10 +167,10 @@ namespace TicTacToe
             SetUserPlayer(userShapeChoice);
 
             // Print initial board
-            GameBoard.PrintBoard();
+            Board.PrintBoard();
 
             // While the game is not over
-            while (GameBoard.Result == GameResult.Incomplete)
+            while (Board.Result == GameResult.Incomplete)
             {
                 NewTurn();
             }
@@ -212,39 +184,39 @@ namespace TicTacToe
             Space choiceOfSpaceToOccupy;
 
             // Display current turn info
-            Console.WriteLine($"Turn: {currentTurnPlayer.Name} ({currentTurnPlayer.Shape})");
+            Console.WriteLine($"Turn: {CurrentTurnPlayer.Name} ({CurrentTurnPlayer.Shape})");
 
             // Choose a space to make the move.
 
-            if (currentTurnPlayer == userPlayer)
+            if (CurrentTurnPlayer == userPlayer)
             {
                 choiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
             }
-            else if (currentTurnPlayer == botPlayer)
+            else if (CurrentTurnPlayer == botPlayer)
             {
                 // This block is where the bot AI will decide to make a move.
                 // Set choiceOfSpaceToOccupy to the Space that the bot decides to take according to the AI decision model.
                 DifficultyLevel difficultyLevel = DifficultyLevel.Hard;
-                choiceOfSpaceToOccupy = BotAI.GetMove(difficultyLevel, GameBoard);
+                choiceOfSpaceToOccupy = BotAI.GetMove(difficultyLevel, Board);
             }
             else
             {
-                throw new Exception("Invalid currentTurnPlayer. currentTurnPlayer is neither userPlayer nor botPlayer.");
+                throw new Exception("Invalid CurrentTurnPlayer. Game.CurrentTurnPlayer is neither userPlayer nor botPlayer.");
             }
 
             // Occupy the space chosen and assign that space to the player who has the turn.
-            Board.OccupySpace(GameBoard, choiceOfSpaceToOccupy, currentTurnPlayer);
+            Board.OccupySpace(Board, choiceOfSpaceToOccupy, CurrentTurnPlayer);
 
             // Print current state of the board
-            GameBoard.PrintBoard();
+            Board.PrintBoard();
 
             // If there is a winner or draw
-            GameResult gameResult = Board.GetResultFromBoard(GameBoard);
+            GameResult gameResult = Board.GetResultFromBoard(Board);
             bool gameIsOver = (gameResult != GameResult.Incomplete);
             if (gameIsOver)
             {
                 // Update state.
-                GameBoard.Result = gameResult;
+                Board.Result = gameResult;
                 UpdateScores();
 
                 // Display winner and scores.
@@ -270,15 +242,15 @@ namespace TicTacToe
         /// <exception cref="Exception"></exception>
         public void UpdateScores()
         {
-            GameResult gameResult = GameBoard.Result;
+            GameResult gameResult = Board.Result;
 
             if (gameResult == GameResult.Incomplete)
             {
                 throw new Exception($"Scores can't be updated because game is incomplete.");
             }
 
-            bool hasWinner = (GameBoard.Result == GameResult.WinnerX) || (GameBoard.Result == GameResult.WinnerO);
-            bool hasTie = GameBoard.Result == GameResult.Tie;
+            bool hasWinner = (Board.Result == GameResult.WinnerX) || (Board.Result == GameResult.WinnerO);
+            bool hasTie = Board.Result == GameResult.Tie;
 
             if (hasWinner)
             {
@@ -323,7 +295,7 @@ namespace TicTacToe
         /// </summary>
         public void RestartGame()
         {
-            GameBoard = new Board();
+            Board = new Board();
 
             DetermineTurn();
 
@@ -391,7 +363,7 @@ namespace TicTacToe
                 if (spaceInputIsValidInt)
                 {
                     spaceNumber = int.Parse(spaceInput);
-                    chosenSpace = GameBoard.GetBoardSpaceFromInt(spaceNumber);
+                    chosenSpace = Board.GetBoardSpaceFromInt(spaceNumber);
 
                     // Validate if chosen space is already taken.
                     if (chosenSpace.IsOccupied())
@@ -409,7 +381,7 @@ namespace TicTacToe
                 }
             } while (!spaceIsValid);
 
-            return GameBoard.GetBoardSpaceFromInt(spaceNumber);
+            return Board.GetBoardSpaceFromInt(spaceNumber);
         }
 
         /// <summary>
@@ -547,9 +519,9 @@ namespace TicTacToe
             template += $"-Game info-\n";
             template += $"countOfTurns: {turnCount}\n";
             template += $"nextAssignableId: {nextAssignableId}\n";
-            template += $"currentTurnPlayer: {currentTurnPlayer.Identifier}\n";
-            template += $"GetCurrentTurnPlayer(): {GetCurrentTurnPlayer().Identifier}\n";
-            template += $"GetNotCurrentTurnPlayer(): {GetNotCurrentTurnPlayer().Identifier}\n";
+            template += $"currentTurnPlayer: {CurrentTurnPlayer.Identifier}\n";
+            template += $"GetCurrentTurnPlayer(): {CurrentTurnPlayer.Identifier}\n";
+            template += $"GetNotCurrentTurnPlayer(): {NotCurrentTurnPlayer.Identifier}\n";
 
             template += $"\n\n-Player info-\n";
             template += $"Player count: {players.Length}\n\n";
