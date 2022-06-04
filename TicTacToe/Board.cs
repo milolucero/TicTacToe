@@ -473,7 +473,7 @@ namespace TicTacToe
                     Space space = Spaces[count];
 
                     // Get a string representation of the shape in the given space, or "." if null.
-                    string shape = space.Occupant is null ? "." : space.Occupant.ToString();
+                    string shape = (space.Occupant is null || space.Occupant is Shape.None) ? "." : space.Occupant.ToString();
 
                     template += $"{shape}";
                     count++;
