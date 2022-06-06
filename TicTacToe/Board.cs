@@ -15,26 +15,6 @@ namespace TicTacToe
         private readonly int width;
 
         /// <summary>
-        /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
-        /// </summary>
-        /// <param name="spaces">The spaces that populate the board.</param>
-        public Board(Space[] spaces)
-        {
-            height = Rule.GetBoardDimensions().height;
-            width = Rule.GetBoardDimensions().width;
-            this.Spaces = spaces;
-            this.Result = GetResultFromBoard(this);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Board class without arguments, filling the board with empty (unassigned) spaces.
-        /// </summary>
-        public Board() : this(GetArrayOfEmptySpacesForBoard(Rule.GetBoardDimensions().height, Rule.GetBoardDimensions().width))
-        {
-
-        }
-
-        /// <summary>
         /// Property representing an array of the board's spaces.
         /// </summary>
         public Space[] Spaces
@@ -64,11 +44,56 @@ namespace TicTacToe
         }
 
         /// <summary>
+        /// Initializes a new instance of the Board class, specifying the spaces that fill the board.
+        /// If the given spaces don't fully fill the board, an unoccupied space is placed in those positions.
+        /// </summary>
+        /// <param name="spaces">The spaces that populate the board.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If any of the given spaces is our of the board's range or if the given spaces have more items than the board's range.</exception>
+        public Board(Space[] spaces)
+        {
+            // Guard clause
+            Validate.BoardConstructorSpacesArgument(spaces);
+
+            height = Rule.GetBoardDimensions().height;
+            width = Rule.GetBoardDimensions().width;
+
+            // Populate board with empty spaces
+            this.Spaces = GetArrayOfEmptySpacesForBoard();
+
+            // Place the given spaces in their positions
+            foreach (Space space in spaces)
+            {
+                // Guard clause if given space is out of board's range 
+                if (space.Position.X >= this.height || space.Position.Y >= this.width)
+                    throw new ArgumentOutOfRangeException(nameof(spaces), $"Space in position ({space.Position.X}, {space.Position.Y}) is out of the board's height and width.");
+
+                // Locate correct position and place space
+                for (int i  = 0; i < Spaces.Length; i++)
+                {
+                    if (space.Position.X == Spaces[i].Position.X && space.Position.Y == Spaces[i].Position.Y)
+                    {
+                        Spaces[i] = space;
+                    }
+                }
+            }
+
+            this.Result = GetResultFromBoard(this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Board class without arguments, filling the board with empty (unassigned) spaces.
+        /// </summary>
+        public Board() : this(GetArrayOfEmptySpacesForBoard())
+        {
+
+        }
+
+        /// <summary>
         /// Returns a list containing the currently empty spaces of the given board.
         /// </summary>
         /// <param name="board">The board object.</param>
         /// <returns>A list containing the currently empty spaces of the board.</returns>
-        public List<Space> GetEmptySpaces(Board board)
+        public static List<Space> GetEmptySpaces(Board board)
         {
             List<Space> emptySpaces = new List<Space>();
 
@@ -98,8 +123,11 @@ namespace TicTacToe
         /// <param name="boardHeight">The height of the board.</param>
         /// <param name="boardWidth">The width of the board.</param>
         /// <returns>An array of empty spaces for the specified board height and width.</returns>
-        public static Space[] GetArrayOfEmptySpacesForBoard(int boardHeight, int boardWidth)
+        public static Space[] GetArrayOfEmptySpacesForBoard()
         {
+            int boardHeight = Rule.GetBoardDimensions().height;
+            int boardWidth = Rule.GetBoardDimensions().width;
+
             Space[] spaces = new Space[boardHeight * boardWidth];
 
             // Populate spaces array with new spaces at the specified coordinates
@@ -119,54 +147,33 @@ namespace TicTacToe
         }
 
         /// <summary>
-        /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated. Returns true if the space was taken succesfully, false if it was already occupied.
+        /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated.
         /// </summary>
         /// <param name="board">The board.</param>
         /// <param name="space">The space to occupy.</param>
-        /// <param name="player">The player whose state should be updated, or null.</param>
-        /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
-        public static bool OccupySpace(Board board, Space space, Player? player)
+        /// <param name="player">The player whose state should be updated, or null (default).</param>
+        /// <exception cref="ArgumentException">If the given space is already occupied.</exception>
+        public static void OccupySpace(Board board, Space space, Player? player = null)
         {
+            // Guard clause
+            if (space.IsOccupied())
+                throw new ArgumentException($"Cannot occupy space in position (X: {space.Position.X}, Y: {space.Position.Y}) by player {player.Name}, since it is not empty (already taken by {space.Occupant}).");
+
             Shape shapeToPlay = GetShapeOfTurnFromBoard(board);
-            bool spaceOccupiedSuccessfully = false;
 
-            if (!space.IsOccupied())
-            {
-                // Make a clone of the space, set the occupant, and assign it to the same space position in the given board. This will avoid mutating the given space, allowing for simulating moves without affecting the original argument's state.
-                Space spaceClone = Space.GetSpaceClone(space);
-                spaceClone.Occupant = shapeToPlay;
-                board.SetSpace(spaceClone);
+            // Make a clone of the space, set the occupant, and assign it to the same space position in the given board.
+            // This will avoid mutating the given space, allowing for simulating moves without affecting the original argument's state.
+            Space spaceClone = Space.GetSpaceClone(space);
+            spaceClone.Occupant = shapeToPlay;
+            board.SetSpace(spaceClone);
 
-                // If given a player as an argument, add the given space to the spaces that belong to this player.
-                if (player is not null)
-                {
-                    player.AddToOccupiedSpaces(space);
-                }
+            // If given a player as an argument, add the given space to the spaces that belong to this player.
+            if (player is not null)
+                player.AddToOccupiedSpaces(space);
 
-                List<Space> emptySpaces = board.EmptySpaces;
-                emptySpaces.Remove(space);
-                board.EmptySpaces = emptySpaces;
-
-                spaceOccupiedSuccessfully = true;
-            }
-            else
-            {
-                Console.WriteLine($"Space {space} - Appears to be occupied.");
-                Console.WriteLine("The space is already taken. Choose another one.");
-            }
-
-            return spaceOccupiedSuccessfully;
-        }
-
-        /// <summary>
-        /// Occupies a specific space of a board by the shape that has the turn. If a player is specified, the player's occupied spaces are updated. Returns true if the space was taken succesfully, false if it was already occupied.
-        /// </summary>
-        /// <param name="board">The board.</param>
-        /// <param name="space">The space to occupy.</param>
-        /// <returns>True if the space was taken succesfully, false if it was already occupied.</returns>
-        public static bool OccupySpace(Board board, Space space)
-        {            
-            return OccupySpace(board, space, null);
+            List<Space> emptySpaces = board.EmptySpaces;
+            emptySpaces.Remove(space);
+            board.EmptySpaces = emptySpaces;
         }
 
         /// <summary>
@@ -334,7 +341,7 @@ namespace TicTacToe
 
             for (int i = 0; i < Spaces.Length; i++)
             {
-                if (Spaces[i].Occupant is null)
+                if (Spaces[i].Occupant is Shape.None)
                 {
                     shapes[i] = " ";
                 }
@@ -439,7 +446,7 @@ namespace TicTacToe
 
             foreach (Space space in board.Spaces)
             {
-                if (space.Occupant is not null)
+                if (space.Occupant is not Shape.None)
                 {
                     if (space.Occupant == Shape.X)
                     {
@@ -454,6 +461,8 @@ namespace TicTacToe
 
             return countOfX == countOfO ? Shape.X : Shape.O;
         }
+
+
 
         /// <summary>
         /// Returns a string representation of the board and its current state.
@@ -473,7 +482,7 @@ namespace TicTacToe
                     Space space = Spaces[count];
 
                     // Get a string representation of the shape in the given space, or "." if null.
-                    string shape = (space.Occupant is null || space.Occupant is Shape.None) ? "." : space.Occupant.ToString();
+                    string shape = space.Occupant is Shape.None ? "." : space.Occupant.ToString();
 
                     template += $"{shape}";
                     count++;

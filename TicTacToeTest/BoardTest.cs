@@ -5,6 +5,7 @@ namespace TicTacToeTest
     [TestClass]
     public class BoardTest
     {
+        // Initialize a board without arguments.
         [TestMethod]
         public void Constructor_noArguments_Initialize()
         {
@@ -17,12 +18,13 @@ namespace TicTacToeTest
             Assert.AreEqual(Expected, result);
         }
 
+        // Initialize a board with given spaces in correct format.
         [TestMethod]
         public void Constructor_Spaces_Initialize()
         {
             const string Expected = "[XO.]\n[XXX]\n[XXX]\n";
 
-            Space[] testSpaces = new Space[8]
+            Space[] testSpaces = new Space[9]
             {
                 new Space(new Position(0,0), Shape.X),
                 new Space(new Position(0,1), Shape.O),
@@ -32,7 +34,7 @@ namespace TicTacToeTest
                 new Space(new Position(1,2), Shape.X),
                 new Space(new Position(2,0), Shape.X),
                 new Space(new Position(2,1), Shape.X),
-                //new Space(new Position(2,2), Shape.X),
+                new Space(new Position(2,2), Shape.X),
             };
 
             Board board = new Board(testSpaces);
@@ -40,6 +42,204 @@ namespace TicTacToeTest
             string result = board.ToString();
 
             Assert.AreEqual(Expected, result);
+        }
+
+        // Initializing a board while passing a space argument with less spaces than the board's height * width.
+        [TestMethod]
+        public void Constructor_LessSpaces_Initialize()
+        {
+            const string Expected = "[X..]\n[...]\n[...]\n";
+
+            Space[] testSpaces = new Space[1]
+            {
+                new Space(new Position(0,0), Shape.X),
+            };
+
+            Board board = new Board(testSpaces);
+
+            string result = board.ToString();
+
+            Assert.AreEqual(Expected, result);
+        }
+
+        // Initializing a board while passing a space argument with more spaces than the board's height * width.
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Constructor_MoreSpaces_Initialize()
+        {
+            Space[] testSpaces = new Space[10]
+            {
+                new Space(new Position(0,0), Shape.X),
+                new Space(new Position(0,1), Shape.O),
+                new Space(new Position(0,2), Shape.None),
+                new Space(new Position(1,0), Shape.X),
+                new Space(new Position(1,1), Shape.X),
+                new Space(new Position(1,2), Shape.X),
+                new Space(new Position(2,0), Shape.X),
+                new Space(new Position(2,1), Shape.X),
+                new Space(new Position(2,2), Shape.X),
+                new Space(new Position(2,2), Shape.X),
+            };
+
+            new Board(testSpaces);
+        }
+
+        // Initializing a board while passing a space argument with a space's position out of the board's range.
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Constructor_SpaceOutOfRange_Initialize()
+        {
+            Space[] testSpaces = new Space[1]
+            {
+                new Space(new Position(0, 9999)),
+            };
+
+            new Board(testSpaces);
+        }
+
+        // Initializing a board while passing a spaces argument with two spaces at the same position.
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Constructor_RepeatedSpace_Initialize()
+        {
+            Space[] testSpaces = new Space[2]
+            {
+                new Space(new Position(1,1), Shape.None),
+                new Space(new Position(1,1), Shape.None),
+            };
+
+            Board board = new Board(testSpaces);
+        }
+
+        [TestMethod]
+        public void GetEmptySpaces_OneEmptySpace_ListOfEmptySpaces()
+        {
+            Space emptySpace = new Space(new Position(0, 2), Shape.None);
+
+            Space[] testSpaces = new Space[9]
+            {
+                new Space(new Position(0,0), Shape.X),
+                new Space(new Position(0,1), Shape.O),
+                emptySpace,
+                new Space(new Position(1,0), Shape.X),
+                new Space(new Position(1,1), Shape.X),
+                new Space(new Position(1,2), Shape.X),
+                new Space(new Position(2,0), Shape.X),
+                new Space(new Position(2,1), Shape.X),
+                new Space(new Position(2,2), Shape.X),
+            };
+
+            Board board = new Board(testSpaces);
+
+            List<Space> emptySpaces = Board.GetEmptySpaces(board);
+
+            // Test number of resulting empty spaces
+            const int expectedLength = 1;
+            Assert.AreEqual(expectedLength, emptySpaces.Count);
+
+            // Compare values of resulting empty spaces
+            Assert.AreEqual(emptySpace, emptySpaces[0]);
+        }
+
+        [TestMethod]
+        public void GetEmptySpaces_AllSpacesEmpty_ListOfEmptySpaces()
+        {
+            Space[] testSpaces = new Space[9]
+            {
+                new Space(new Position(0,0), Shape.None),
+                new Space(new Position(0,1), Shape.None),
+                new Space(new Position(0,2), Shape.None),
+                new Space(new Position(1,0), Shape.None),
+                new Space(new Position(1,1), Shape.None),
+                new Space(new Position(1,2), Shape.None),
+                new Space(new Position(2,0), Shape.None),
+                new Space(new Position(2,1), Shape.None),
+                new Space(new Position(2,2), Shape.None),
+            };
+
+            Board board = new Board(testSpaces);
+
+            List<Space> emptySpaces = Board.GetEmptySpaces(board);
+
+            // Test number of resulting empty spaces
+            const int expectedLength = 9;
+            Assert.AreEqual(expectedLength, emptySpaces.Count);
+        }
+
+        [TestMethod]
+        public void GetEmptySpaces_NoEmptySpaces_ListOfEmptySpaces()
+        {
+            Space[] testSpaces = new Space[9]
+            {
+                new Space(new Position(0,0), Shape.X),
+                new Space(new Position(0,1), Shape.O),
+                new Space(new Position(0,2), Shape.O),
+                new Space(new Position(1,0), Shape.X),
+                new Space(new Position(1,1), Shape.X),
+                new Space(new Position(1,2), Shape.X),
+                new Space(new Position(2,0), Shape.X),
+                new Space(new Position(2,1), Shape.X),
+                new Space(new Position(2,2), Shape.X),
+            };
+
+            Board board = new Board(testSpaces);
+
+            List<Space> emptySpaces = Board.GetEmptySpaces(board);
+
+            // Test number of resulting empty spaces
+            const int expectedLength = 0;
+            Assert.AreEqual(expectedLength, emptySpaces.Count);
+        }
+
+        // Resulting empty array must be:
+        // 1. The same length as the board's height * width.
+        // 2. All spaces must be empty (space.Occupant is Shape.None)
+        // 3. Positions must start at (0,0) and increment according to the height and width.
+        [TestMethod]
+        public void GetArrayOfEmptySpacesForBoard_ArrayOfEmptySpaces()
+        {
+            Space[] arrayOfEmptySpaces = Board.GetArrayOfEmptySpacesForBoard();
+            int boardHeight = Rule.GetBoardDimensions().height;
+            int boardWidth = Rule.GetBoardDimensions().width;
+
+            // 1. Test length of result
+            int expectedLength = boardHeight * boardWidth;
+            Assert.AreEqual(expectedLength, arrayOfEmptySpaces.Length);
+
+            // 2. Test content of resulting spaces (empty => Shape.None)
+            foreach (Space space in arrayOfEmptySpaces)
+            {
+                if (space.Occupant is not Shape.None)
+                    Assert.Fail($"space in position (X: {space.Position.X}, Y: {space.Position.Y}) is not empty (occupant: {space.Occupant}).");
+            }
+
+            // 3.Positions must start at(0, 0) and increment according to the height and width.
+            for (int i = 0; i < boardHeight; i++)
+            {
+                for (int j = 0; j < boardWidth; j++)
+                {
+                    int currentArrayPosition = (i * boardWidth) + j;
+                    if (arrayOfEmptySpaces[currentArrayPosition].Position.X != i || arrayOfEmptySpaces[currentArrayPosition].Position.Y != j)
+                        Assert.Fail($"The positions of the spaces are not in the correct order. Board expected position (X: {i}, Y: {j}), but received space with position (X: {arrayOfEmptySpaces[currentArrayPosition].Position.X}, Y: {arrayOfEmptySpaces[currentArrayPosition].Position.Y})");
+                }
+            }
+        }
+
+        // 1. The occupied space is applied to the given board.
+        // 2. The occupied space is removed from the board's empty spaces.
+        // 3. The occupied space is in the correct position.
+        // 4. The space is occupied by the given player.
+        // 5. The space is occupied by null if no player parameter is given.
+        // 6. If the given space is already occupied, ArgumentException is thrown.
+        // 7. If a player is given, it space is added to the player.OccupiedSpaces.
+        [TestMethod]
+        public void OccupySpace_()
+        {
+            // Create a test game
+            Game game = new Game();
+
+            // 1. The occupied space is applied to the given board.
+
         }
     }
 }

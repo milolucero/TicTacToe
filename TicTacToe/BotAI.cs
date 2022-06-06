@@ -43,7 +43,7 @@ namespace TicTacToe
         public static Space GetRandomMove(Board board)
         {
             // If middle space is empty, choose it.
-            bool middleSpaceIsEmpty = board.GetBoardSpaceFromInt(5).Occupant == null;
+            bool middleSpaceIsEmpty = board.GetBoardSpaceFromInt(5).Occupant == Shape.None;
             if (middleSpaceIsEmpty)
             {
                 return board.GetBoardSpaceFromInt(5);

@@ -16,7 +16,7 @@ namespace TicTacToe
         /// </summary>
         /// <param name="position">The position where the space is located.</param>
         /// <param name="occupant">The shape that occupies the space.</param>
-        public Space(Position position, Shape? occupant)
+        public Space(Position position, Shape occupant)
         {
             this.Position = position;
             this.Occupant = occupant;
@@ -26,7 +26,7 @@ namespace TicTacToe
         /// Initializes a new instance of the Space class, with specified position and no occupant (null).
         /// </summary>
         /// <param name="position">The position where the space is located.</param>
-        public Space(Position position) : this(position, null)
+        public Space(Position position) : this(position, Shape.None)
         {
 
         }
@@ -42,7 +42,7 @@ namespace TicTacToe
         /// <summary>
         /// Property representing the player who occupies the space, or null if it is unoccupied.
         /// </summary>
-        public Shape? Occupant
+        public Shape Occupant
         {
             get; set;
         }
@@ -53,7 +53,7 @@ namespace TicTacToe
         /// <returns>True if the space is occupied by a player, false otherwise.</returns>
         public bool IsOccupied()
         {
-            return (Occupant is not null);
+            return (Occupant is not Shape.None);
         }
 
         /// <summary>
