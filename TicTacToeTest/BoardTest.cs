@@ -233,13 +233,67 @@ namespace TicTacToeTest
         // 6. If the given space is already occupied, ArgumentException is thrown.
         // 7. If a player is given, it space is added to the player.OccupiedSpaces.
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void OccupySpace_()
         {
-            // Create a test game
+            // Create a test game, user is "X"
             Game game = new Game();
+            game.SetUserPlayer(Shape.X);
+            Space choiceOfSpaceToOccupy;
+            int spacesOccupied = 0;
+            int amountOfSpacesOnBoard = Rule.GetBoardDimensions().height * Rule.GetBoardDimensions().width;
 
-            // 1. The occupied space is applied to the given board.
+            // Check that the amount of empty spaces on the board are correct.
+            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard);
 
+            // Turn 1 (X): Occupy bottom left space.
+            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(1);
+            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
+            game.DetermineTurn();
+            spacesOccupied++;
+
+            // Check if X is now on the space.
+            Assert.IsTrue(ValidateOccupant(game.Board, positionX: 0, positionY: 0, Shape.X));
+
+            // Check that the amount of empty spaces on the board are correct.
+            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard - spacesOccupied);
+
+            // Turn 2 (O): Occupy bottom center space.
+            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(2);
+            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
+            game.DetermineTurn();
+            spacesOccupied++;
+
+            // Check if O is now on the space.
+            Assert.IsTrue(ValidateOccupant(game.Board, positionX: 0, positionY: 1, Shape.O));
+
+            // Check that the amount of empty spaces on the board are correct.
+            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard - spacesOccupied);
+
+            // Turn 3 (X): Tries to occupy the space that is occupied by O.
+            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(2);
+            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
+            // No spaces occupied here, an exception is expected for trying to occupy the occupied space.
+        }
+
+        /// <summary>
+        /// Returns true if the space on the specified position of the given board matches the specified occupant; otherwise, false.
+        /// </summary>
+        /// <param name="board">The board to check.</param>
+        /// <param name="positionX">The coordinate X to check.</param>
+        /// <param name="positionY">The coordinate Y to check.</param>
+        /// <param name="occupant">The occupant to compare against the current space on the board in the specified coordinates.</param>
+        /// <returns>True if the space on the specified position of the given board matches the specified occupant; otherwise, false.</returns>
+        /// <exception cref="ArgumentException">If there is no space in the board that matches the specified coordinates.</exception>
+        private bool ValidateOccupant(Board board, int positionX, int positionY, Shape occupant)
+        {
+            foreach (Space space in board.Spaces)
+            {
+                if (space.Position.X == positionX && space.Position.Y == positionY)
+                    return space.Occupant == occupant;
+            }
+
+            throw new ArgumentException($"Occupant cannot be validated. No space on the board matched position (X: {positionX}, Y: {positionY}).");
         }
     }
 }

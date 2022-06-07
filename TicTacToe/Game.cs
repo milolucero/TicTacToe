@@ -187,14 +187,13 @@ namespace TicTacToe
             Console.WriteLine($"Turn: {CurrentTurnPlayer.Name} ({CurrentTurnPlayer.Shape})");
 
             // Choose a space to make the move.
-
             if (CurrentTurnPlayer == userPlayer)
             {
                 choiceOfSpaceToOccupy = PromptPickSpaceToOccupy();
             }
             else if (CurrentTurnPlayer == botPlayer)
             {
-                // This block is where the bot AI will decide to make a move.
+                // This block is where the bot AI decides the move to make.
                 // Set choiceOfSpaceToOccupy to the Space that the bot decides to take according to the AI decision model.
                 DifficultyLevel difficultyLevel = DifficultyLevel.Hard;
                 choiceOfSpaceToOccupy = BotAI.GetMove(difficultyLevel, Board);
@@ -239,7 +238,7 @@ namespace TicTacToe
         /// <summary>
         /// Updates the state of the scores and result history. Should be called when a game is over (winner or tie).
         /// </summary>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">Thrown if trying to update the score when the game is incomplete or if the game determined a winner but the winning shape is not X or O.</exception>
         public void UpdateScores()
         {
             GameResult gameResult = Board.Result;
