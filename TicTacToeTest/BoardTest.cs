@@ -233,51 +233,50 @@ namespace TicTacToeTest
         // 6. If the given space is already occupied, ArgumentException is thrown.
         // 7. If a player is given, it space is added to the player.OccupiedSpaces.
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        //[ExpectedException(typeof(ArgumentException))]
         public void OccupySpace_()
         {
             // Create a test game, user is "X"
-            Game game = new Game();
-            game.SetUserPlayer(Shape.X);
+            //Game game = new Game();
+            //game.SetUserPlayer(Shape.X);
+
+            // Create a test game, the next turn corresponds to O.
+            //Game game = SimulateGameFromBoard(GetTestBoard(2));
+            /*
+             * Board 2 - Expected
+             * X..
+             * .X.
+             * ..O
+             */
+
+            /* Actual
+             * O..
+             * .X.
+             * ..X
+             */ 
+            Board board = GetTestBoard(2);
+
             Space choiceOfSpaceToOccupy;
-            int spacesOccupied = 0;
             int amountOfSpacesOnBoard = Rule.GetBoardDimensions().height * Rule.GetBoardDimensions().width;
 
             // Check that the amount of empty spaces on the board are correct.
-            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard);
+            //Assert.AreEqual(board.GetEmptySpaces().Count, amountOfSpacesOnBoard);
 
-            // Turn 1 (X): Occupy bottom left space.
-            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(1);
-            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
-            game.DetermineTurn();
-            spacesOccupied++;
-
-            // Check if X is now on the space.
-            Assert.IsTrue(ValidateOccupant(game.Board, positionX: 0, positionY: 0, Shape.X));
-
-            // Check that the amount of empty spaces on the board are correct.
-            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard - spacesOccupied);
-
-            // Turn 2 (O): Occupy bottom center space.
-            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(2);
-            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
-            game.DetermineTurn();
-            spacesOccupied++;
+            // Turn (O): Occupy bottom center space.
+            //choiceOfSpaceToOccupy = board.GetBoardSpaceFromInt(2);
+            //Board.OccupySpace(board, choiceOfSpaceToOccupy);
 
             // Check if O is now on the space.
-            Assert.IsTrue(ValidateOccupant(game.Board, positionX: 0, positionY: 1, Shape.O));
+            Assert.IsTrue(VerifyOccupant(board, positionX: 0, positionY: 2, Shape.O));
 
-            // Check that the amount of empty spaces on the board are correct.
-            Assert.AreEqual(game.Board.GetEmptySpaces().Count, amountOfSpacesOnBoard - spacesOccupied);
-
-            // Turn 3 (X): Tries to occupy the space that is occupied by O.
-            choiceOfSpaceToOccupy = game.Board.GetBoardSpaceFromInt(2);
-            Board.OccupySpace(game.Board, choiceOfSpaceToOccupy, game.CurrentTurnPlayer);
+            // Turn (X): Tries to occupy the space that is occupied by X.
+            //choiceOfSpaceToOccupy = board.GetBoardSpaceFromInt(2);
+            //Board.OccupySpace(board, choiceOfSpaceToOccupy);
             // No spaces occupied here, an exception is expected for trying to occupy the occupied space.
         }
 
         /// <summary>
-        /// Returns true if the space on the specified position of the given board matches the specified occupant; otherwise, false.
+        /// Returns true if the space on the specified position of the given board matches the specified occupant; otherwise, false. 
         /// </summary>
         /// <param name="board">The board to check.</param>
         /// <param name="positionX">The coordinate X to check.</param>
@@ -285,7 +284,7 @@ namespace TicTacToeTest
         /// <param name="occupant">The occupant to compare against the current space on the board in the specified coordinates.</param>
         /// <returns>True if the space on the specified position of the given board matches the specified occupant; otherwise, false.</returns>
         /// <exception cref="ArgumentException">If there is no space in the board that matches the specified coordinates.</exception>
-        private bool ValidateOccupant(Board board, int positionX, int positionY, Shape occupant)
+        private bool VerifyOccupant(Board board, int positionX, int positionY, Shape occupant)
         {
             foreach (Space space in board.Spaces)
             {
@@ -294,6 +293,153 @@ namespace TicTacToeTest
             }
 
             throw new ArgumentException($"Occupant cannot be validated. No space on the board matched position (X: {positionX}, Y: {positionY}).");
+        }
+
+        /// <summary>
+        /// Simulates a new game with the specified board.
+        /// </summary>
+        /// <param name="board">The board from which the game should continue.</param>
+        private static void SimulateGameFromBoard(Board board)
+        {
+            Game game = new Game(board);
+            game.NewGame();
+        }
+
+        /// <summary>
+        /// Returns a board filled with specific occupied spaces designed for testing purposes.
+        /// </summary>
+        /// <param name="boardNumber">The number of the board to get returned (see inline comments to see the board design).</param>
+        /// <returns></returns>
+        private static Board GetTestBoard(int boardNumber)
+        {
+            Board board = new Board();
+
+            /*
+             * Board 1
+             * O.X
+             * X.X
+             * .OO
+             */
+            if (boardNumber == 1)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(3));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(2));
+            }
+
+            /*
+             * Board 2
+             * X..
+             * .X.
+             * ..O
+             */
+            if (boardNumber == 2)
+            {
+                Board.OccupySpace(board, board.GetSpace(new Position(0, 2))); // X
+                Board.OccupySpace(board, board.GetSpace(new Position(2, 0))); // O
+                Board.OccupySpace(board, board.GetSpace(new Position(1, 1))); // X
+            }
+
+            /*
+             * Board 3
+             * OXX
+             * OOX
+             * ...
+             */
+            if (boardNumber == 3)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6));
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4));
+            }
+
+            /*
+             * Board 4 - O Plays. Two options: One move leads to draw, the other leads to O losing.
+             * OXX
+             * XXO
+             * O..
+             */
+            if (boardNumber == 4)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+            }
+
+            /*
+             * Board 5 - X plays. The best move is on space 4, since it guarantees a win in X's next turn, regardless of O's move.
+             * Use this to test the bot's algorithm. Playing as X, the bot should always pick space 4 in its first turn.
+             * XO.
+             * ..X
+             * ..O
+             */
+            if (boardNumber == 5)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(3)); // O
+            }
+
+            /*
+             * Board 6 - O plays. Both alternatives lead to O's losing. Check how the bot behaves when playing as O.
+             * XXO
+             * OXX
+             * O..
+             */
+            if (boardNumber == 6)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(6)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+            }
+
+            /*
+             * Board 7 - O plays. X is about to win by choosing 6. O must decide to choose 6 to keep alive.
+             * O.X
+             * XX.
+             * O..
+             */
+            if (boardNumber == 7)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(7)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(5)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+            }
+
+            /*
+             * Board 8 - X plays. 3 options, one move leads to a win, the others lead to a lose in the next turn. X must choose 7 to win.
+             * .OO
+             * X..
+             * XXO
+             */
+            if (boardNumber == 8)
+            {
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(1)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(9)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(2)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(3)); // O
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(4)); // X
+                Board.OccupySpace(board, board.GetBoardSpaceFromInt(8)); // O
+            }
+
+            return board;
         }
     }
 }

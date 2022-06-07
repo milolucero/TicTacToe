@@ -29,16 +29,6 @@ namespace TicTacToe
             game.NewGame();
         }
 
-        public static void Test1(Game game)
-        {
-            Console.WriteLine(game);
-
-            //Console.WriteLine("\n\nSwitching turns...\n\n");
-            //game.SwitchTurns();
-
-            //Console.WriteLine(game);
-        }
-
         public static void TestTurnSwitching()
         {
             Game game = new Game();
@@ -67,11 +57,6 @@ namespace TicTacToe
             Console.WriteLine($"Expected: O");
             Console.WriteLine($"Actual game.GetCurrentTurnPlayer(): {game.CurrentTurnPlayer.Shape}");
             Console.WriteLine($"Actual game.GetNotCurrentTurnPlayer(): {game.NotCurrentTurnPlayer.Shape}");
-        }
-
-        public static void TestBoard(Game game)
-        {
-            Console.WriteLine(game.Board);
         }
 
         public static void TestOccupySpace(Game game)
