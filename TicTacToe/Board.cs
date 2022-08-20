@@ -369,9 +369,21 @@ namespace TicTacToe
         /// </summary>
         /// <param name="number">The number of the space in the board, starting from 1, going left-to-right, bottom-to-top.</param>
         /// <returns>The space located in the board position represented by the number.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the integer position is out of range for the board's spaces.</exception>
         public Space GetBoardSpaceFromInt(int number)
         {
-            return Spaces[number - 1];
+            // Validate that the number is within the board's range.
+            (int height, int width) = Rule.GetBoardDimensions();
+
+            int min = 1;
+            int max = height * width;
+
+            if (number >= min && number <= max)
+            {
+                return Spaces[number - 1];
+            }
+
+            throw new ArgumentOutOfRangeException($"Space out of bounds. No space of the board matches the integer position \"{number}\".");
         }
 
         /// <summary>
@@ -380,7 +392,7 @@ namespace TicTacToe
         /// <param name="x">The horizontal coordinate.</param>
         /// <param name="y">The vertical coordinate.</param>
         /// <returns>The space located at the specified coordinate.</returns>
-        /// <exception cref="Exception">Thrown if the coordinates are out of range for the board's spaces.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the coordinates are out of range for the board's spaces.</exception>
         public Space GetBoardSpaceFromCoordinates(int x, int y)
         {
             // To get a 0-8 position from an (x, y) coordinate, we add x to y times the board's width.
@@ -392,7 +404,7 @@ namespace TicTacToe
                 return Spaces[(x + 1) + (y * 3)];
             }
 
-            throw new Exception($"Space out of bounds. Trying to get space ({x}, {y}), equivalent to position [{positionOnArray}] of an array of {Spaces.Length} elements.");            
+            throw new ArgumentOutOfRangeException($"Space out of bounds. Trying to get space ({x}, {y}), equivalent to position [{positionOnArray}] of an array of {Spaces.Length} elements.");            
         }
 
         /// <summary>
