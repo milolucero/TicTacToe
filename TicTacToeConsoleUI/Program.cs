@@ -21,22 +21,190 @@ namespace TicTacToeConsoleUI
 
             do
             {
-                Shape userShapeChoice = PromptUserShapeChoice();
-
-                DifficultyLevel difficultyLevel = PromptLevelOfDifficulty();
-
+                (Shape userShapeChoice, DifficultyLevel difficultyLevel) = PromptInitialSettings();
+                
                 Game game = new Game(userShapeChoice, difficultyLevel);
 
-                Console.WriteLine($"\nUser shape: {userShapeChoice}\nDifficulty level: {difficultyLevel}");
+                StartGame(game);
 
-                // TODO: Display the game
-
-                playAgain = PromptPlayAgain();
+                //playAgain = PromptPlayAgain();
 
                 Console.ReadLine();
             } while (playAgain);
 
             // Test.RunTests();
+        }
+
+        /// <summary>
+        /// Prompts the user to make the initial game setup.
+        /// </summary>
+        /// <returns>A tuple containing the user shape and level of difficulty chosen by the user.</returns>
+        private static (Shape userShapeChoice, DifficultyLevel difficultyLevel) PromptInitialSettings()
+        {
+            Shape userShapeChoice = PromptUserShapeChoice();
+
+            DifficultyLevel difficultyLevel = PromptLevelOfDifficulty();
+
+            Console.WriteLine($"\nUser shape: {userShapeChoice}\nDifficulty level: {difficultyLevel}\n");
+
+            return (userShapeChoice, difficultyLevel);
+        }
+
+        /// <summary>
+        /// Starts a new game.
+        /// </summary>
+        /// <param name="game">The instance of the game.</param>
+        private static void StartGame(Game game)
+        {
+            while (game.Board.Result == GameResult.Incomplete)
+            {
+                PrintBoard(game);
+
+                DisplayTurn(game);
+
+                MakeMove(game);
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user to make a move or makes the bot make a move according to who has the turn to play.
+        /// </summary>
+        /// <param name="game">The instance of the game.</param>
+        private static void MakeMove(Game game)
+        {
+            (int x, int y) moveCoordinates;
+
+            // If user has the turn, prompt user to choose a space.
+            bool userHasTheTurn = game.CurrentTurnShape() == game.UserShape;
+
+            if (userHasTheTurn)
+            {
+                moveCoordinates = PromptUserForMove();
+            }
+            else
+            {
+                // Get AI move according to level of difficulty and board state.
+                // moveCoordinates = 
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user to pick a space to make a move.
+        /// </summary>
+        /// <returns>The board coordinate of the space chosen by the user.</returns>
+        private static (int x, int y) PromptUserForMove()
+        {
+            string userInput;
+            int userSpaceChoiceInt;
+            bool inputIsInt;
+            bool inputIsInRange;
+            bool userInputIsValid = false;
+            (int, int) boardCoordinate = (-1, -1);
+
+            do
+            {
+                // Get user input
+                Console.Write("\nChoose a space (1-9): ");
+                userInput = Console.ReadLine();
+                Console.WriteLine();
+
+                // Validate input
+                inputIsInt = int.TryParse(userInput, out userSpaceChoiceInt);
+
+                if (!inputIsInt)
+                {
+                    Console.WriteLine($"\"{userInput}\" is not a number. Please enter a number between 1 and 9.");
+                    continue;
+                }
+
+                inputIsInRange = userSpaceChoiceInt >= 1 && userSpaceChoiceInt <= 9;
+
+                if (!inputIsInRange)
+                {
+                    Console.WriteLine($"The number {userSpaceChoiceInt} is not valid. Please enter a number between 1 and 9.");
+                    continue;
+                }
+
+                // Convert input into a coordinate of the board
+                boardCoordinate = GetBoardCoordinateFromInt(userSpaceChoiceInt);
+
+                // Check if space is taken
+                //if (spaceIsTaken)
+                //{
+                //    Console.WriteLine($"Space number {userSpaceChoiceInt} is already taken by {}. Please choose another one.");
+                //}
+
+                userInputIsValid = true;
+            } while (!userInputIsValid);
+
+            return boardCoordinate;
+        }
+
+        /// <summary>
+        /// Takes a number between 1 and 9, returns the X and Y coordinate that the given number would represent on the board (left to right, bottom to top).
+        /// </summary>
+        /// <param name="position">A number between 1 and 9 representing a position on the board.</param>
+        /// <returns>The (X, Y) coordinate of the given board position.</returns>
+        private static (int x, int y) GetBoardCoordinateFromInt(int position)
+        {
+            // Using integer division to floor the result.
+            int x = (position - 1) / 3;
+            int y = (position - 1) % 3;
+
+            return (x, y);
+        }
+
+        /// <summary>
+        /// Prints a message to display who has the turn to play.
+        /// </summary>
+        /// <param name="game">The instance of the game.</param>
+        private static void DisplayTurn(Game game)
+        {
+            Shape currentTurnShape = game.CurrentTurnShape();
+            Shape userShape = game.UserShape;
+
+            string currentTurnPlayer = currentTurnShape == userShape ? "You" : "Bot";
+
+            string message = $"Turn: {currentTurnPlayer} ({currentTurnShape})";
+
+            Console.WriteLine(message);
+        }
+
+        /// <summary>
+        /// Prints a representation of the current board of the game.
+        /// </summary>
+        /// <param name="game"></param>
+        private static void PrintBoard(Game game)
+        {
+            string template = "";
+            Board board = game.Board;
+
+
+            string[] shapes = new string[board.Spaces.Length];
+
+            for (int i = 0; i < board.Spaces.Length; i++)
+            {
+                if (board.Spaces[i].Occupant is Shape.None)
+                {
+                    shapes[i] = " ";
+                }
+                else
+                {
+                    shapes[i] = board.Spaces[i].Occupant.ToString();
+                }
+            }
+
+            template += $"   |   |   \n";
+            template += $" {shapes[6]} | {shapes[7]} | {shapes[8]} \n";
+            template += $"___|___|___\n";
+            template += $"   |   |   \n";
+            template += $" {shapes[3]} | {shapes[4]} | {shapes[5]} \n";
+            template += $"___|___|___\n";
+            template += $"   |   |   \n";
+            template += $" {shapes[0]} | {shapes[1]} | {shapes[2]} \n";
+            template += $"   |   |   \n";
+
+            Console.WriteLine(template);
         }
 
         /// <summary>
@@ -113,12 +281,12 @@ namespace TicTacToeConsoleUI
 
                     if (!userInputIsValidDifficultyLevel)
                     {
-                        Console.WriteLine($"\"{userInput}\" is not a valid level of difficulty. Please write a number from 1 to 3.");
+                        Console.WriteLine($"\"{userInput}\" is not a valid level of difficulty. Please enter a number between 1 and 3.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"\"{userInput}\" is not a number. Please write a number from 1 to 3.");
+                    Console.WriteLine($"\"{userInput}\" is not a number. Please enter a number between 1 and 3.");
                 }
 
             } while(!userInputIsValidDifficultyLevel);
