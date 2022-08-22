@@ -4,20 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TicTacToe
+namespace TicTacToeLibrary
 {
-    internal class Validate
+    public class Validate
     {
-        /// <summary>
-        /// Validates the spaces to construct a board.
-        /// </summary>
-        /// <param name="spaces">The spaces to construct a board.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the spaces given are more than the board's capacity.</exception>
-        /// <exception cref="ArgumentException">If there are spaces overlapping in the same position.</exception>
         public static void BoardConstructorSpacesArgument(Space[] spaces)
         {
             // Argument spaces must contain less or equal items as the board's height * width
-            (int height, int width) = Rule.GetBoardDimensions();
+            int height = Rule.GetBoardDimensions().height;
+            int width = Rule.GetBoardDimensions().width;
 
             if (spaces.Length > height * width)
                 throw new ArgumentOutOfRangeException(nameof(spaces), "The given spaces contain more items than the board can hold.");
